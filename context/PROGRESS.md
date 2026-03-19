@@ -21,14 +21,16 @@ Phase 0 — Not started
 
 ### Phase 2 — Game Screen
 - [ ] Display current word from the shuffled deck
-- [ ] Implement 60-second countdown timer with auto-transition to Results on expiry
+- [ ] Implement 60-second countdown timer; on expiry, set `lastWord: true` instead of auto-transitioning
 - [ ] Implement Correct button — record result, advance to next word
 - [ ] Implement Skip button — record result, advance to next word
 - [ ] Handle deck exhaustion (wrap around to beginning)
+- [ ] Add Steal button — always rendered, active only when `lastWord` is true; styled to show inactive vs. active
+- [ ] When `lastWord` is true, any button press records result and transitions to Results
 
 ### Phase 3 — Results Screen
-- [ ] Display correct count and skip count for the completed turn
-- [ ] Render word-by-word review list (word + correct/skip label)
+- [ ] Display correct, skip, and steal counts for the completed turn
+- [ ] Render word-by-word review list (word + correct/skip/steal label; include stolen word if any)
 - [ ] "Start New Turn" button resumes from current deck position
 
 ### Phase 4 — Start Screen + Polish

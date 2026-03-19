@@ -21,9 +21,10 @@ StartScreen
 GameScreen
   — Displays current word (deck[deckIndex])
   — Runs the 60-second countdown timer
-  — Correct button: records { word, result: 'correct' }, advances deckIndex
-  — Skip button: records { word, result: 'skip' }, advances deckIndex
-  — Timer expiry: transitions to 'results'
+  — Correct button: records { word, result: 'correct' }, advances deckIndex (or ends turn if lastWord)
+  — Skip button: records { word, result: 'skip' }, advances deckIndex (or ends turn if lastWord)
+  — Steal button: always rendered; active only when lastWord is true; records { word, result: 'steal' } and ends turn
+  — Timer expiry: sets lastWord = true (does NOT auto-transition)
 
 ResultsScreen
   — Displays correct count and skip count for the completed turn
@@ -40,13 +41,14 @@ GamePhase
 
 TurnEntry
   word: string
-  result: 'correct' | 'skip'
+  result: 'correct' | 'skip' | 'steal'
 
 GameState (held in App.tsx)
   phase: GamePhase
   deck: string[]          — shuffled copy of all phrases, set once per game
   deckIndex: number       — current position in deck, persists across turns
   currentTurn: TurnEntry[] — entries for the turn in progress
+  lastWord: boolean       — true when timer has hit 0; cleared when a new turn starts
 ```
 
 ## Key Technical Decisions

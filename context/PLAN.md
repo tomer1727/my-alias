@@ -38,19 +38,21 @@ Goal: All three screens render (as placeholders) and phase transitions work corr
 4. Wire phase transitions: Start → Game → Results → Game (new turn) / Start (new game) [medium]
 
 ### Phase 2 — Game Screen
-Goal: Fully functional game screen — words advance, timer counts down, turn ends automatically.
+Goal: Fully functional game screen — words advance, timer counts down, turn ends on last word.
 
 1. Display current word from the shuffled deck [simple]
-2. Implement 60-second countdown timer with auto-transition to Results on expiry [medium]
+2. Implement 60-second countdown timer; on expiry, set `lastWord: true` instead of auto-transitioning [medium]
 3. Implement Correct button — record result, advance to next word [simple]
 4. Implement Skip button — record result, advance to next word [simple]
 5. Handle deck exhaustion (wrap around to beginning) [simple]
+6. Add Steal button — always rendered, active only when `lastWord` is true; use color/style to indicate inactive vs. active state [simple]
+7. When `lastWord` is true, any button press (Correct / Skip / Steal) records the result and transitions to Results instead of advancing to next word [simple]
 
 ### Phase 3 — Results Screen
 Goal: Results screen shows accurate turn summary and correctly resumes the game.
 
-1. Display correct count and skip count for the completed turn [simple]
-2. Render word-by-word review list (word + correct/skip label) [simple]
+1. Display correct, skip, and steal counts for the completed turn [simple]
+2. Render word-by-word review list (word + correct/skip/steal label; include the stolen word if any) [simple]
 3. "Start New Turn" button resumes from current deck position [simple]
 
 ### Phase 4 — Start Screen + Polish
