@@ -44,4 +44,4 @@ context/BACKLOG.md      — Future features and ideas
 
 ## Current Focus
 
-> Currently working on: v2 Phase 1 — Configurable Timer
+> Currently working on: Phase 3 — GitHub Pages deployment + mobile validation

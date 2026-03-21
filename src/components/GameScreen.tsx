@@ -3,14 +3,15 @@ import { useEffect, useRef, useState } from 'react'
 type Props = {
   currentWord: string
   lastWord: boolean
+  timerDuration: number
   onCorrect: () => void
   onSkip: () => void
   onSteal: () => void
   onTimerExpiry: () => void
 }
 
-export default function GameScreen({ currentWord, lastWord, onCorrect, onSkip, onSteal, onTimerExpiry }: Props) {
-  const [timeLeft, setTimeLeft] = useState(60)
+export default function GameScreen({ currentWord, lastWord, timerDuration, onCorrect, onSkip, onSteal, onTimerExpiry }: Props) {
+  const [timeLeft, setTimeLeft] = useState(timerDuration)
   const expiredRef = useRef(false)
 
   useEffect(() => {

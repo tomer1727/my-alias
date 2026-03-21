@@ -20,25 +20,42 @@ const initialState: GameState = {
   deckIndex: 0,
   currentTurn: [],
   lastWord: false,
+  timerDuration: 60,
+  gameTotals: { correct: 0, skip: 0, steal: 0 },
 }
 
 export default function App() {
   const [state, setState] = useState<GameState>(initialState)
 
-  function handleStartGame() {
-    console.log('Game: new game started')
+  function handleStartGame(timerDuration: number) {
+    console.log(`Game: new game started, timer=${timerDuration}s`)
     setState({
       phase: 'game',
       deck: shuffle(phrases),
       deckIndex: 0,
       currentTurn: [],
       lastWord: false,
+      timerDuration,
+      gameTotals: { correct: 0, skip: 0, steal: 0 },
     })
   }
 
   function handleStartNewTurn() {
     console.log('Game: new turn started, deck index', state.deckIndex)
     setState(s => ({ ...s, phase: 'game', currentTurn: [], lastWord: false }))
+  }
+
+  function handleNewGame() {
+    console.log('Game: new game — resetting totals and reshuffling deck')
+    setState(s => ({
+      ...s,
+      phase: 'game',
+      deck: shuffle(phrases),
+      deckIndex: 0,
+      currentTurn: [],
+      lastWord: false,
+      gameTotals: { correct: 0, skip: 0, steal: 0 },
+    }))
   }
 
   function handleTimerExpiry() {
@@ -52,11 +69,16 @@ export default function App() {
 
     if (state.lastWord) {
       console.log(`Game: ${result} on last word — transitioning to results`)
-      setState(s => ({
-        ...s,
-        phase: 'results',
-        currentTurn: [...s.currentTurn, entry],
-      }))
+      setState(s => {
+        const turn = [...s.currentTurn, entry]
+        const totals = {
+          correct: s.gameTotals.correct + turn.filter(e => e.result === 'correct').length,
+          skip: s.gameTotals.skip + turn.filter(e => e.result === 'skip').length,
+          steal: s.gameTotals.steal + turn.filter(e => e.result === 'steal').length,
+        }
+        console.log(`Results: totals correct=${totals.correct} skip=${totals.skip} steal=${totals.steal}`)
+        return { ...s, phase: 'results', currentTurn: turn, gameTotals: totals }
+      })
     } else {
       const nextIndex = (state.deckIndex + 1) % state.deck.length
       if (nextIndex === 0) console.log('Game: deck wrapped around to beginning')
@@ -84,6 +106,7 @@ export default function App() {
       <GameScreen
         currentWord={currentWord}
         lastWord={state.lastWord}
+        timerDuration={state.timerDuration}
         onCorrect={handleCorrect}
         onSkip={handleSkip}
         onSteal={handleSteal}
@@ -95,7 +118,9 @@ export default function App() {
   return (
     <ResultsScreen
       currentTurn={state.currentTurn}
+      gameTotals={state.gameTotals}
       onStartNewTurn={handleStartNewTurn}
+      onNewGame={handleNewGame}
     />
   )
 }

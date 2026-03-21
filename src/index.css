@@ -47,6 +47,23 @@ body {
   max-width: 320px;
 }
 
+/* ── Secondary button ──────────────────────────────────── */
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #475569;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-secondary:active {
+  background: #cbd5e1;
+}
+
 /* ── Start screen ──────────────────────────────────────── */
 
 .start-screen {
@@ -58,6 +75,58 @@ body {
   font-weight: 900;
   letter-spacing: -2px;
   color: #22c55e;
+}
+
+.timer-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.timer-selector-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.timer-stepper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stepper-btn {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.stepper-btn:active:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.stepper-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.stepper-value {
+  font-size: 2rem;
+  font-weight: 900;
+  min-width: 5rem;
+  text-align: center;
+  color: #1e293b;
 }
 
 /* ── Game screen ───────────────────────────────────────── */
@@ -198,3 +267,61 @@ body {
 .entry-badge-correct { background: #dcfce7; color: #15803d; }
 .entry-badge-skip    { background: #f1f5f9; color: #475569; }
 .entry-badge-steal   { background: #fef3c7; color: #b45309; }
+
+/* ── Score row ─────────────────────────────────────────── */
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.25rem;
+}
+
+.score-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.score-value {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #1e293b;
+}
+
+.score-value-total {
+  font-size: 2rem;
+  color: #22c55e;
+}
+
+/* ── Game total section ────────────────────────────────── */
+
+.game-total-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.game-total-title {
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+/* ── Results actions ───────────────────────────────────── */
+
+.results-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+}
