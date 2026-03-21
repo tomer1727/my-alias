@@ -30,7 +30,7 @@ export default function GameScreen({ currentWord, lastWord, onCorrect, onSkip, o
   const timerClass = `timer${timeLeft <= 5 && timeLeft > 0 ? ' timer-pulse' : ''}`
 
   return (
-    <div className="game-screen">
+    <div className="screen game-screen">
       <div className={timerClass} style={{ color: timerColor }}>
         {timeLeft}
       </div>

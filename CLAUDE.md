@@ -41,4 +41,4 @@ context/BACKLOG.md      — Future features and ideas
 
 ## Current Focus
 
-> Currently working on: Phase 3 — Results Screen
+> Currently working on: Phase 5 — Phrase Bank

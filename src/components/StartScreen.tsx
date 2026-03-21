@@ -4,9 +4,9 @@ type Props = {
 
 export default function StartScreen({ onStartGame }: Props) {
   return (
-    <div>
-      <h1>Alias</h1>
-      <button onClick={onStartGame}>Start New Game</button>
+    <div className="screen start-screen">
+      <h1 className="start-title">Alias</h1>
+      <button className="btn-primary btn-large" onClick={onStartGame}>Start New Game</button>
     </div>
   )
 }
