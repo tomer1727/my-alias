@@ -5,19 +5,15 @@ Add items here as they come up. Use the `add-feature` skill to promote them to t
 
 ## Real-time Multiplayer
 What: Sync game state between players so everyone sees the same word, timer, and scores in real time — no need for a video call to coordinate.
-Why deferred: Significant complexity (requires a backend with WebSockets or a managed service like Supabase/Firebase). Not needed for the personal use case in v1.
+Why deferred: Significant complexity (requires a backend with WebSockets or a managed service like Supabase/Firebase). Not needed for the personal use case in v2.
 
-## Configurable Timer
-What: Let players set the turn duration (e.g., 30s, 60s, 90s) on the Start screen.
-Why deferred: Not needed for MVP — 60 seconds is a good default. Easy to add later.
-
-## Score Tracking Across Turns
-What: Track each team's cumulative score within a game, removing the need for paper scorekeeping.
-Why deferred: Requires knowing the team/player setup. Out of scope for v1.
+## Two-Team Score Tracking
+What: Track Team A and Team B scores separately, alternating turns between teams, with a leaderboard visible on the Results screen.
+Why deferred: Depends on real-time connectivity so both teams can see a shared score. Deferred until multiplayer is added.
 
 ## Phrase Bank Growth (to ~2000)
 What: Expand the phrase bank from ~100 to ~2000 diverse phrases across many categories.
-Why deferred: Content work — best done after the game is working and the team has played a few sessions to understand what kinds of phrases work well.
+Why deferred: Content work — best done after the team has played more sessions to understand what kinds of phrases work well.
 
 ## Difficulty / Category Filters
 What: Tag phrases with difficulty (easy/hard) and category, and let players filter which subset to play with.

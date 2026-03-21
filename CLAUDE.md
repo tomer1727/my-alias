@@ -1,7 +1,8 @@
 # Alias Game
 
-A simple browser-based Alias word-guessing game for personal use with friends over video call.
-No backend, no auth, no real-time sync — purely a static web app.
+A browser-based Alias word-guessing game for personal use with friends over video call.
+No backend, no auth, no real-time sync — purely a static web app deployed to GitHub Pages.
+Features: configurable turn timer, per-turn and cumulative score tracking, 100 Hebrew phrases.
 
 ## Tech Stack
 
@@ -27,6 +28,8 @@ context/            # Project planning docs
 - All game state lives in `App.tsx` — screens are stateless and receive props
 - Phase switching is controlled by a `phase` field: `'start' | 'game' | 'results'`
 - The shuffled deck and deck index persist across turns within a single game
+- `gameTotals` accumulates correct/skip/steal counts across all turns; score = correct − skipped
+- `timerDuration` (seconds) is selected on Start screen and passed through to GameScreen
 - Phrases are a plain `string[]` in `phrases.ts` — no metadata, no IDs
 - Mobile-friendly layout — game is played on phones while on a video call
 
@@ -41,4 +44,4 @@ context/BACKLOG.md      — Future features and ideas
 
 ## Current Focus
 
-> The initial plan is complete. Run expand-project to plan the next version.
+> Currently working on: v2 Phase 1 — Configurable Timer
