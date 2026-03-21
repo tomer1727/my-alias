@@ -5,7 +5,7 @@
 ```
 Phase 1 — Complete
 Phase 2 — Complete
-Phase 3 — Not started
+Phase 3 — Complete
 ```
 
 ## Phase Progress
@@ -22,22 +22,24 @@ Phase 3 — Not started
 - [x] Add "New Game" button to Results screen (resets totals + reshuffles deck)
 
 ### Phase 3 — GitHub Pages Deployment + Mobile Validation
-- [ ] Configure `vite.config.ts` `base` for GitHub Pages
-- [ ] Add `gh-pages` package + `deploy` script to `package.json`
-- [ ] Write deployment guide (repo setup → push → enable Pages)
-- [ ] Mobile validation pass — viewport, tap targets, no horizontal scroll
+- [x] Configure `vite.config.ts` `base` for GitHub Pages
+- [x] Add `gh-pages` package + `deploy` script to `package.json`
+- [x] Write deployment guide (repo setup → push → enable Pages)
+- [x] Mobile validation pass — viewport, tap targets, no horizontal scroll
 
 ## Completed Work
 
 _(nothing yet this version)_
 
 [2026-03-21] — Phase 1 + 2 complete: configurable timer stepper on Start screen, gameTotals accumulation, Results screen with "This Turn" + "Game Total" sections, score display, New Game button
+[2026-03-21] — Phase 3 complete: GitHub Pages deployment configured, gh-pages deploy script added, deployment guide written, mobile CSS hardened
 
 ## Implementation Decisions
 
 [2026-03-21] — Timer selector implemented as +/− stepper (10s steps, 10s–300s range, default 60s) instead of preset buttons — simpler and more flexible
 [2026-03-21] — gameTotals accumulated at the point of phase transition to results (inside `recordAndAdvance` on lastWord) — avoids needing a separate `onEndTurn` handler
 [2026-03-21] — "New Game" reshuffles deck and resets totals but preserves `timerDuration` from the current game
+[2026-03-21] — SSH host alias `github-second` configured for deploying as tomer1727 from this machine
 
 ## Open Questions / Blockers
 
@@ -45,7 +47,7 @@ _(none)_
 
 ## Next Session
 
-Start Phase 3 — Configure `vite.config.ts` base for GitHub Pages
+Plan complete — run expand-project if you want to plan the next version
 
 ---
 

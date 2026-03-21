@@ -44,4 +44,5 @@ context/BACKLOG.md      — Future features and ideas
 
 ## Current Focus
 
-> Currently working on: Phase 3 — GitHub Pages deployment + mobile validation
+> All phases complete — app is deployed to https://tomer1727.github.io/my-alias/
+> Run `npm run deploy` to publish updates. Run expand-project to plan the next version.
