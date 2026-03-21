@@ -8,6 +8,7 @@ Phase 1 — Complete
 Phase 2 — Complete
 Phase 3 — Complete
 Phase 4 — Complete
+Phase 5 — Complete
 ```
 
 ## Phase Progress
@@ -45,9 +46,9 @@ Phase 4 — Complete
 - [x] Test full game flow end-to-end on mobile viewport
 
 ### Phase 5 — Phrase Bank
-- [ ] Curate ~100 phrases across varied categories
-- [ ] Mix of easy and hard, mostly single words with some two-word phrases
-- [ ] Write phrases into src/phrases.ts
+- [x] Curate ~100 phrases across varied categories
+- [x] Mix of easy and hard, mostly single words with some two-word phrases
+- [x] Write phrases into src/phrases.ts
 
 ## Completed Work
 
@@ -56,6 +57,7 @@ Phase 4 — Complete
 - Phase 2 complete (2026-03-21): game screen fully functional — timer with color coding and pulse animation, Correct/Skip/Steal buttons, deck wrap-around, last-word behavior
 - Phase 3 complete (2026-03-21): results screen functional — counts, word-by-word list, Start New Turn button (was already implemented in Phase 1 placeholder)
 - Phase 4 complete (2026-03-21): full visual polish — Start screen with large branded title, Results screen with stat cards and color-coded badges, consistent screen layout and typography across all screens
+- Phase 5 complete (2026-03-21): 100 Hebrew phrases written into src/phrases.ts — 80 single words + 20 two-word phrases, ~50/50 easy/hard, across 10 categories
 
 ## Implementation Decisions
 
@@ -64,6 +66,7 @@ Phase 4 — Complete
 - Steal button styled grey/muted when inactive, amber when active (lastWord=true)
 - Results stat cards use soft tinted backgrounds (green/slate/amber) matching the game button palette
 - Phase 4 "visual feedback on buttons" satisfied by existing static colors — no press animation added (user confirmed this is sufficient)
+- Phrase bank is Hebrew-only, ~50/50 easy/hard split, 80 single words + 20 two-word phrases
 
 ## Open Questions / Blockers
 
@@ -71,4 +74,4 @@ _(none)_
 
 ## Next Session
 
-Start Phase 5 — Phrase Bank (curate ~100 phrases into src/phrases.ts)
+Plan complete — run expand-project if you want to plan the next version

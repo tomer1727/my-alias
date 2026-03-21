@@ -41,4 +41,4 @@ context/BACKLOG.md      — Future features and ideas
 
 ## Current Focus
 
-> Currently working on: Phase 5 — Phrase Bank
+> The initial plan is complete. Run expand-project to plan the next version.
