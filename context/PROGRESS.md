@@ -3,21 +3,23 @@
 ## Current Status
 
 ```
-Phase 0 — Not started
+Phase 0 — Complete
+Phase 1 — Complete
+Phase 2 — Not started
 ```
 
 ## Phase Progress
 
 ### Phase 0 — Environment Setup
-- [ ] Initialize Vite + React + TypeScript project
-- [ ] Install dependencies and confirm dev server starts
-- [ ] Clean up Vite boilerplate
+- [x] Initialize Vite + React + TypeScript project
+- [x] Install dependencies and confirm dev server starts
+- [x] Clean up Vite boilerplate
 
 ### Phase 1 — App Skeleton + Types + Phase Switching
-- [ ] Define shared TypeScript types (GamePhase, TurnEntry, GameState)
-- [ ] Implement top-level App.tsx with game state and phase switching logic
-- [ ] Create placeholder StartScreen, GameScreen, ResultsScreen components
-- [ ] Wire phase transitions: Start → Game → Results → Game / Start
+- [x] Define shared TypeScript types (GamePhase, TurnEntry, GameState)
+- [x] Implement top-level App.tsx with game state and phase switching logic
+- [x] Create placeholder StartScreen, GameScreen, ResultsScreen components
+- [x] Wire phase transitions: Start → Game → Results → Game / Start
 
 ### Phase 2 — Game Screen
 - [ ] Display current word from the shuffled deck
@@ -47,7 +49,8 @@ Phase 0 — Not started
 
 ## Completed Work
 
-_(nothing yet)_
+- Phase 0 complete (2026-03-21): Vite + React + TS scaffolded, boilerplate removed, build passing
+- Phase 1 complete (2026-03-21): types defined, App.tsx with state/phase switching, placeholder screens, Start→Game transition working
 
 ## Implementation Decisions
 
@@ -59,4 +62,4 @@ _(none)_
 
 ## Next Session
 
-Start Phase 0 — Initialize Vite + React + TypeScript project
+Start Phase 2 — Game Screen

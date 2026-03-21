@@ -41,4 +41,4 @@ context/BACKLOG.md      — Future features and ideas
 
 ## Current Focus
 
-> Currently working on: Phase 0 — Environment setup
+> Currently working on: Phase 2 — Game Screen
