@@ -5,7 +5,8 @@
 ```
 Phase 0 — Complete
 Phase 1 — Complete
-Phase 2 — Not started
+Phase 2 — Complete
+Phase 3 — Not started
 ```
 
 ## Phase Progress
@@ -22,13 +23,13 @@ Phase 2 — Not started
 - [x] Wire phase transitions: Start → Game → Results → Game / Start
 
 ### Phase 2 — Game Screen
-- [ ] Display current word from the shuffled deck
-- [ ] Implement 60-second countdown timer; on expiry, set `lastWord: true` instead of auto-transitioning
-- [ ] Implement Correct button — record result, advance to next word
-- [ ] Implement Skip button — record result, advance to next word
-- [ ] Handle deck exhaustion (wrap around to beginning)
-- [ ] Add Steal button — always rendered, active only when `lastWord` is true; styled to show inactive vs. active
-- [ ] When `lastWord` is true, any button press records result and transitions to Results
+- [x] Display current word from the shuffled deck
+- [x] Implement 60-second countdown timer; on expiry, set `lastWord: true` instead of auto-transitioning
+- [x] Implement Correct button — record result, advance to next word
+- [x] Implement Skip button — record result, advance to next word
+- [x] Handle deck exhaustion (wrap around to beginning)
+- [x] Add Steal button — always rendered, active only when `lastWord` is true; styled to show inactive vs. active
+- [x] When `lastWord` is true, any button press records result and transitions to Results
 
 ### Phase 3 — Results Screen
 - [ ] Display correct, skip, and steal counts for the completed turn
@@ -51,10 +52,13 @@ Phase 2 — Not started
 
 - Phase 0 complete (2026-03-21): Vite + React + TS scaffolded, boilerplate removed, build passing
 - Phase 1 complete (2026-03-21): types defined, App.tsx with state/phase switching, placeholder screens, Start→Game transition working
+- Phase 2 complete (2026-03-21): game screen fully functional — timer with color coding and pulse animation, Correct/Skip/Steal buttons, deck wrap-around, last-word behavior
 
 ## Implementation Decisions
 
-_(decisions made during coding that weren't in the original plan)_
+- Timer state (timeLeft) lives in GameScreen as local state; expiry notifies App.tsx via onTimerExpiry callback to set lastWord: true
+- Timer color: green (>10s), orange (≤10s), red (0); pulse animation added for last 5s — included in Phase 2 since it's tied to timer state
+- Steal button styled grey/muted when inactive, amber when active (lastWord=true)
 
 ## Open Questions / Blockers
 
@@ -62,4 +66,4 @@ _(none)_
 
 ## Next Session
 
-Start Phase 2 — Game Screen
+Start Phase 3 — Results Screen

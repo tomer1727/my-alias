@@ -41,10 +41,37 @@ export default function App() {
     setState(s => ({ ...s, phase: 'game', currentTurn: [], lastWord: false }))
   }
 
-  // Stubs — filled in Phase 2
-  function handleCorrect() {}
-  function handleSkip() {}
-  function handleSteal() {}
+  function handleTimerExpiry() {
+    console.log('Game: timer expired, last word active')
+    setState(s => ({ ...s, lastWord: true }))
+  }
+
+  function recordAndAdvance(result: 'correct' | 'skip' | 'steal') {
+    const word = state.deck[state.deckIndex] ?? ''
+    const entry = { word, result }
+
+    if (state.lastWord) {
+      console.log(`Game: ${result} on last word — transitioning to results`)
+      setState(s => ({
+        ...s,
+        phase: 'results',
+        currentTurn: [...s.currentTurn, entry],
+      }))
+    } else {
+      const nextIndex = (state.deckIndex + 1) % state.deck.length
+      if (nextIndex === 0) console.log('Game: deck wrapped around to beginning')
+      console.log(`Game: ${result}, advancing to word index ${nextIndex}`)
+      setState(s => ({
+        ...s,
+        deckIndex: nextIndex,
+        currentTurn: [...s.currentTurn, entry],
+      }))
+    }
+  }
+
+  function handleCorrect() { recordAndAdvance('correct') }
+  function handleSkip() { recordAndAdvance('skip') }
+  function handleSteal() { recordAndAdvance('steal') }
 
   const currentWord = state.deck[state.deckIndex] ?? ''
 
@@ -60,6 +87,7 @@ export default function App() {
         onCorrect={handleCorrect}
         onSkip={handleSkip}
         onSteal={handleSteal}
+        onTimerExpiry={handleTimerExpiry}
       />
     )
   }
