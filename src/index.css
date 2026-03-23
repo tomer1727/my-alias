@@ -761,3 +761,118 @@ body {
   text-align: center;
   margin-top: 0.5rem;
 }
+
+.score-row-active .score-label {
+  color: #15803d;
+  font-weight: 800;
+}
+
+.score-row-active .score-value {
+  color: #15803d;
+}
+
+.score-delta {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-left: 0.4rem;
+}
+
+.score-delta-pos { color: #22c55e; }
+.score-delta-neg { color: #dc2626; }
+
+.results-waiting {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.results-game-over {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.results-game-over-badge {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  text-align: center;
+}
+
+/* ── Win screen ────────────────────────────────────────── */
+
+.win-screen {
+  gap: 2rem;
+  text-align: center;
+}
+
+.win-trophy {
+  font-size: 5rem;
+  line-height: 1;
+}
+
+.win-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #22c55e;
+  letter-spacing: -1px;
+}
+
+.win-scores {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 280px;
+  justify-content: center;
+}
+
+.win-score-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  gap: 0.25rem;
+}
+
+.win-score-winner {
+  background: #dcfce7;
+  border-color: #22c55e;
+}
+
+.win-score-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.win-score-winner .win-score-label {
+  color: #15803d;
+}
+
+.win-score-value {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #1e293b;
+}
+
+.win-score-winner .win-score-value {
+  color: #15803d;
+}
+
+.win-margin {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  font-style: italic;
+}

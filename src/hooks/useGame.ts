@@ -30,6 +30,7 @@ export type GameHook = {
   playerId: string
   currentWord: string | null
   isDescriber: boolean
+  nextDescriberId: string | null
   handleCreateGame: (nickname: string) => Promise<void>
   handleJoinGame: (code: string, nickname: string) => Promise<void>
   handleGoHome: () => void
@@ -41,6 +42,8 @@ export type GameHook = {
   handleStartTurn: () => Promise<void>
   handleWordAction: (result: TurnEntry['result']) => Promise<void>
   handleTimerExpired: () => Promise<void>
+  handleStartNextTurn: () => Promise<void>
+  handlePlayAgain: () => Promise<void>
 }
 
 export function useGame(): GameHook {
@@ -82,6 +85,16 @@ export function useGame(): GameHook {
 
   const currentWord = game ? (shuffledDeck[game.deckIndex] ?? null) : null
   const isDescriber = !!game && game.currentTurn?.describerId === playerId
+
+  // Compute who will describe next (used in TurnResultsScreen to gate the button)
+  const nextDescriberId = useMemo(() => {
+    if (!game || game.currentTurn?.phase !== 'results') return null
+    const nextTeam: Team = game.currentTurn.team === 'A' ? 'B' : 'A'
+    const nextTeamPlayers = Object.keys(game.players).filter(id => game.players[id].team === nextTeam)
+    if (nextTeamPlayers.length === 0) return null
+    const idx = game.teams[nextTeam].turnDescIndex % nextTeamPlayers.length
+    return nextTeamPlayers[idx]
+  }, [game])
 
   const handleCreateGame = useCallback(async (nickname: string) => {
     const code = await generateRoomCode()
@@ -165,5 +178,84 @@ export function useGame(): GameHook {
     console.log('Game: timer expired — last word active')
   }, [roomCode, game])
 
-  return { screen, game, roomCode, playerId, currentWord, isDescriber, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleJoinTeam, handleUpdateConfig, handleStartGame, handleStartTurn, handleWordAction, handleTimerExpired }
+  const handleStartNextTurn = useCallback(async () => {
+    if (!game) return
+    const { team, entries } = game.currentTurn
+    const entryList: TurnEntry[] = Array.isArray(entries) ? entries : []
+
+    // Score delta for the current team: correct +1, skip -1
+    const currentTeamDelta = entryList.reduce((acc, e) => {
+      if (e.result === 'correct') return acc + 1
+      if (e.result === 'skip') return acc - 1
+      return acc
+    }, 0)
+    // Steals give +1 to the opposing team
+    const stealCount = entryList.filter(e => e.result === 'steal').length
+    const otherTeam: Team = team === 'A' ? 'B' : 'A'
+
+    const newCurrentTeamScore = game.teams[team].score + currentTeamDelta
+    const newOtherTeamScore = game.teams[otherTeam].score + stealCount
+
+    const newGlobalTurnIndex = game.globalTurnIndex + 1
+    // Advance describer index for the team that just finished
+    const currentTeamPlayers = Object.keys(game.players).filter(id => game.players[id].team === team)
+    const newCurrentTurnDescIndex = currentTeamPlayers.length > 0
+      ? (game.teams[team].turnDescIndex + 1) % currentTeamPlayers.length
+      : 0
+
+    // Next team is the one that didn't just play
+    const nextTeam: Team = otherTeam
+    const nextTeamPlayers = Object.keys(game.players).filter(id => game.players[id].team === nextTeam)
+    const nextDescIndex = game.teams[nextTeam].turnDescIndex % Math.max(nextTeamPlayers.length, 1)
+    const nextDescriberId = nextTeamPlayers[nextDescIndex] ?? ''
+
+    // Win check
+    const targetScore = game.config.targetScore
+    const currentTeamWins = newCurrentTeamScore >= targetScore
+    const otherTeamWins = newOtherTeamScore >= targetScore
+
+    const updates: Record<string, unknown> = {
+      [`teams/${team}/score`]: newCurrentTeamScore,
+      [`teams/${otherTeam}/score`]: newOtherTeamScore,
+      [`teams/${team}/turnDescIndex`]: newCurrentTurnDescIndex,
+      globalTurnIndex: newGlobalTurnIndex,
+    }
+
+    if (currentTeamWins || otherTeamWins) {
+      updates.winner = currentTeamWins ? team : otherTeam
+      updates.status = 'finished'
+      console.log(`Game: win check — Team ${currentTeamWins ? team : otherTeam} wins!`)
+    } else {
+      updates['currentTurn/team'] = nextTeam
+      updates['currentTurn/describerId'] = nextDescriberId
+      updates['currentTurn/phase'] = 'waiting'
+      updates['currentTurn/startedAt'] = null
+      updates['currentTurn/entries'] = []
+      updates['currentTurn/lastWord'] = false
+    }
+
+    await updateGame(roomCode, updates)
+    console.log(`TurnResults: next turn started — Team ${nextTeam}, score A=${newCurrentTeamScore} B=${newOtherTeamScore}`)
+  }, [roomCode, game])
+
+  const handlePlayAgain = useCallback(async () => {
+    if (!game) return
+    const resetPlayers: Record<string, unknown> = {}
+    Object.keys(game.players).forEach(id => {
+      resetPlayers[`players/${id}/team`] = null
+    })
+    await updateGame(roomCode, {
+      status: 'lobby',
+      'teams/A/score': 0,
+      'teams/A/turnDescIndex': 0,
+      'teams/B/score': 0,
+      'teams/B/turnDescIndex': 0,
+      globalTurnIndex: 0,
+      winner: null,
+      ...resetPlayers,
+    })
+    console.log('WinScreen: play again — reset to lobby')
+  }, [roomCode, game])
+
+  return { screen, game, roomCode, playerId, currentWord, isDescriber, nextDescriberId, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleJoinTeam, handleUpdateConfig, handleStartGame, handleStartTurn, handleWordAction, handleTimerExpired, handleStartNextTurn, handlePlayAgain }
 }

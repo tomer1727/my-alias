@@ -6,6 +6,7 @@ import LobbyScreen from './screens/LobbyScreen'
 import PreTurnScreen from './screens/PreTurnScreen'
 import GameScreen from './screens/GameScreen'
 import TurnResultsScreen from './screens/TurnResultsScreen'
+import WinScreen from './screens/WinScreen'
 
 export default function App() {
   const {
@@ -14,6 +15,7 @@ export default function App() {
     roomCode,
     playerId,
     currentWord,
+    nextDescriberId,
     handleCreateGame,
     handleJoinGame,
     handleGoHome,
@@ -25,6 +27,8 @@ export default function App() {
     handleStartTurn,
     handleWordAction,
     handleTimerExpired,
+    handleStartNextTurn,
+    handlePlayAgain,
   } = useGame()
 
   if (screen === 'home') {
@@ -90,7 +94,23 @@ export default function App() {
   }
 
   if (screen === 'turnResults' && game) {
-    return <TurnResultsScreen game={game} />
+    return (
+      <TurnResultsScreen
+        game={game}
+        playerId={playerId}
+        nextDescriberId={nextDescriberId}
+        onStartNextTurn={handleStartNextTurn}
+      />
+    )
+  }
+
+  if (screen === 'win' && game) {
+    return (
+      <WinScreen
+        game={game}
+        onPlayAgain={handlePlayAgain}
+      />
+    )
   }
 
   // Fallback

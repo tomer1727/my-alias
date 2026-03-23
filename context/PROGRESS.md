@@ -6,7 +6,7 @@
 Phase 1 — Complete
 Phase 2 — Complete
 Phase 3 — Complete
-Phase 4 — Not started
+Phase 4 — Complete
 Phase 5 — Not started
 ```
 
@@ -38,10 +38,10 @@ Phase 5 — Not started
 - [x] Last word handling: Steal activates; any action writes `phase: 'results'`
 
 ### Phase 4 — Turn Results + Score + Win
-- [ ] `TurnResultsScreen` — turn summary + team scores; "Start Next Turn" for next describer
-- [ ] "Start Next Turn" accumulates score, advances turn rotation, clears `currentTurn`
-- [ ] Win check: if `score >= targetScore`, write `winner` and `status: 'finished'`
-- [ ] `WinScreen` — winning team, final scores, Play Again
+- [x] `TurnResultsScreen` — turn summary + team scores; "Start Next Turn" for next describer
+- [x] "Start Next Turn" accumulates score, advances turn rotation, clears `currentTurn`
+- [x] Win check: if `score >= targetScore`, write `winner` and `status: 'finished'`
+- [x] `WinScreen` — winning team, final scores, Play Again
 
 ### Phase 5 — Polish + Edge Cases
 - [ ] Reconnection: check `localStorage` for `playerId`, re-subscribe to active game
@@ -55,6 +55,7 @@ Phase 5 — Not started
 [2026-03-23] — Phase 1 complete: Firebase wired up, room create/join flow working end-to-end with real-time sync
 [2026-03-23] — Phase 2 complete: Lobby with team self-assignment, host config (timer + target score steppers), Start Game flow, host disconnect overlay
 [2026-03-23] — Phase 3 complete: PreTurnScreen, describer + viewer GameScreen, Correct/Skip/Steal actions, timer expiry, last-word handling; TurnResultsScreen placeholder added
+[2026-03-23] — Phase 4 complete: TurnResultsScreen (score preview + Start Next Turn), score accumulation (correct+1/skip-1/steal+1 other), win check, WinScreen, Play Again; win-state UX fix (game-over banner + "Show Final Results" for host instead of misleading "Start Next Turn")
 
 ## Implementation Decisions
 
@@ -69,6 +70,9 @@ Phase 5 — Not started
 [2026-03-23] — Entries appended to Firebase by index (`currentTurn/entries/${length}`); single-writer (describer only) avoids race conditions
 [2026-03-23] — Steal button disabled by default, activates only when `lastWord: true`; any button tap on last word writes `phase: 'results'`
 [2026-03-23] — TurnResultsScreen is a placeholder (shows entries + current scores); full score accumulation + turn rotation deferred to Phase 4
+[2026-03-23] — Scoring: correct +1, skip -1, steal +1 for opposing team
+[2026-03-23] — Play Again resets to lobby and clears all team assignments
+[2026-03-23] — When game-winning turn ends, TurnResultsScreen shows game-over banner + "Show Final Results" (host only) instead of "Start Next Turn" — prevents confusing UX where next describer would navigate everyone to WinScreen
 
 ## Open Questions / Blockers
 
@@ -76,7 +80,7 @@ _(none)_
 
 ## Next Session
 
-Start Phase 4 — Turn Results + Score + Win: TurnResultsScreen (full), score accumulation + turn rotation, win check, WinScreen
+Start Phase 5 — Polish + Edge Cases: reconnection, host-disconnect in-game overlay, stale game cleanup, deploy docs, Firebase security rules
 
 ---
 

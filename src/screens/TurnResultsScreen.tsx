@@ -2,15 +2,24 @@ import type { Game, TurnEntry } from '../types'
 
 type Props = {
   game: Game
+  nextDescriberId: string | null
+  playerId: string
+  onStartNextTurn: () => Promise<void>
 }
 
 const RESULT_LABELS: Record<TurnEntry['result'], string> = {
-  correct: 'Correct',
-  skip: 'Skip',
-  steal: 'Steal',
+  correct: '✓',
+  skip: '✗',
+  steal: '🔀',
 }
 
-export default function TurnResultsScreen({ game }: Props) {
+const RESULT_CLASSES: Record<TurnEntry['result'], string> = {
+  correct: 'entry-badge-correct',
+  skip: 'entry-badge-skip',
+  steal: 'entry-badge-steal',
+}
+
+export default function TurnResultsScreen({ game, nextDescriberId, playerId, onStartNextTurn }: Props) {
   const { team, describerId, entries } = game.currentTurn
   const describerName = game.players[describerId]?.name ?? 'Unknown'
   const entryList: TurnEntry[] = Array.isArray(entries) ? entries : []
@@ -19,10 +28,25 @@ export default function TurnResultsScreen({ game }: Props) {
   const skipped = entryList.filter(e => e.result === 'skip').length
   const steals = entryList.filter(e => e.result === 'steal').length
 
+  // Preview the turn delta before it's committed
+  const otherTeam = team === 'A' ? 'B' : 'A'
+  const thisTeamDelta = correct - skipped
+  const otherTeamDelta = steals
+
+  const isNextDescriber = playerId === nextDescriberId
+  const nextDescriberName = nextDescriberId ? (game.players[nextDescriberId]?.name ?? 'Unknown') : null
+  const isHost = playerId === game.hostId
+
+  // Detect if this turn's score delta would end the game
+  const newTeamScore = game.teams[team].score + thisTeamDelta
+  const newOtherTeamScore = game.teams[otherTeam].score + otherTeamDelta
+  const gameWillEnd = newTeamScore >= game.config.targetScore || newOtherTeamScore >= game.config.targetScore
+  const winningTeam = newTeamScore >= game.config.targetScore ? team : otherTeam
+
   return (
     <div className="screen results-screen">
       <h2 className="results-title">
-        Team {team} — {describerName}'s turn
+        Team {team} — {describerName}
       </h2>
 
       <div className="results-stats">
@@ -44,7 +68,7 @@ export default function TurnResultsScreen({ game }: Props) {
         {entryList.map((e, i) => (
           <li key={i} className="results-entry">
             <span className="entry-word">{e.word}</span>
-            <span className={`entry-badge entry-badge-${e.result}`}>
+            <span className={`entry-badge ${RESULT_CLASSES[e.result]}`}>
               {RESULT_LABELS[e.result]}
             </span>
           </li>
@@ -52,19 +76,68 @@ export default function TurnResultsScreen({ game }: Props) {
       </ul>
 
       <div className="results-scores">
-        <div className="score-row">
+        <div className={`score-row ${team === 'A' ? 'score-row-active' : ''}`}>
           <span className="score-label">Team A</span>
-          <span className="score-value">{game.teams.A.score}</span>
+          <span className="score-value">
+            {game.teams.A.score}
+            {team === 'A' && thisTeamDelta !== 0 && (
+              <span className={`score-delta ${thisTeamDelta > 0 ? 'score-delta-pos' : 'score-delta-neg'}`}>
+                {thisTeamDelta > 0 ? `+${thisTeamDelta}` : thisTeamDelta}
+              </span>
+            )}
+            {otherTeam === 'A' && otherTeamDelta > 0 && (
+              <span className="score-delta score-delta-pos">+{otherTeamDelta}</span>
+            )}
+          </span>
         </div>
-        <div className="score-row">
+        <div className={`score-row ${team === 'B' ? 'score-row-active' : ''}`}>
           <span className="score-label">Team B</span>
-          <span className="score-value">{game.teams.B.score}</span>
+          <span className="score-value">
+            {game.teams.B.score}
+            {team === 'B' && thisTeamDelta !== 0 && (
+              <span className={`score-delta ${thisTeamDelta > 0 ? 'score-delta-pos' : 'score-delta-neg'}`}>
+                {thisTeamDelta > 0 ? `+${thisTeamDelta}` : thisTeamDelta}
+              </span>
+            )}
+            {otherTeam === 'B' && otherTeamDelta > 0 && (
+              <span className="score-delta score-delta-pos">+{otherTeamDelta}</span>
+            )}
+          </span>
         </div>
       </div>
 
-      <p className="results-placeholder-note">
-        Phase 4 coming next session — scores + next turn button
-      </p>
+      {gameWillEnd ? (
+        <div className="results-game-over">
+          <div className="results-game-over-badge">🏆 Team {winningTeam} wins!</div>
+          {isHost ? (
+            <button
+              className="btn-primary btn-large"
+              onClick={() => {
+                console.log('TurnResults: host tapped Show Final Results')
+                onStartNextTurn()
+              }}
+            >
+              Show Final Results
+            </button>
+          ) : (
+            <p className="results-waiting">Waiting for host to show final results…</p>
+          )}
+        </div>
+      ) : isNextDescriber ? (
+        <button
+          className="btn-primary btn-large"
+          onClick={() => {
+            console.log('TurnResults: next describer tapped Start Next Turn')
+            onStartNextTurn()
+          }}
+        >
+          Start Next Turn
+        </button>
+      ) : (
+        <p className="results-waiting">
+          Waiting for {nextDescriberName ?? 'next describer'} to start…
+        </p>
+      )}
     </div>
   )
 }
