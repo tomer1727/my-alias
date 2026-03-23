@@ -6,7 +6,8 @@ type Props = {
 }
 
 export default function WinScreen({ game, onPlayAgain }: Props) {
-  const winner = game.winner!
+  const winner = game.winner
+  if (!winner) return null
   const loser = winner === 'A' ? 'B' : 'A'
 
   return (
