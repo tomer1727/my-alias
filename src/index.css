@@ -245,8 +245,165 @@ body {
   color: #94a3b8;
   font-size: 0.9rem;
   font-style: italic;
+  text-align: center;
+  width: 100%;
 }
 
+/* ── Lobby teams ───────────────────────────────────────── */
+
+.lobby-teams {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.lobby-team-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.75rem;
+}
+
+.lobby-team-col--mine {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+
+.lobby-team-heading {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #475569;
+}
+
+.lobby-team-col--mine .lobby-team-heading {
+  color: #15803d;
+}
+
+.lobby-team-players {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 2rem;
+}
+
+.lobby-team-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+}
+
+.lobby-team-empty {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-style: italic;
+  padding: 0.25rem 0;
+}
+
+.btn-team-join {
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background: #fff;
+  border: 2px solid #22c55e;
+  border-radius: 8px;
+  color: #15803d;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s;
+}
+
+.btn-team-join:active {
+  background: #dcfce7;
+}
+
+/* ── Lobby unassigned ──────────────────────────────────── */
+
+.lobby-unassigned {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lobby-unassigned-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* ── Lobby config ──────────────────────────────────────── */
+
+.lobby-config {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.lobby-config-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lobby-config-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+/* ── Lobby overlay ─────────────────────────────────────── */
+
+.lobby-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+}
+
+.lobby-overlay-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 300px;
+  width: 100%;
+}
+
+.lobby-overlay-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #dc2626;
+}
+
+.lobby-overlay-sub {
+  font-size: 0.9rem;
+  color: #64748b;
+}
 /* ── Start screen ──────────────────────────────────────── */
 
 .start-screen {

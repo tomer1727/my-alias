@@ -59,7 +59,7 @@ context/archive/PLAN_v1.md — Archived v1 plan (all phases complete)
 
 ## Current Focus
 
-> v2 Multiplayer — Phase 2 not started
-> Phase 1 complete: Firebase wired, create/join flow live.
-> Run `session-execute` to continue with Phase 2 (Lobby).
+> v2 Multiplayer — Phase 3 not started
+> Phase 2 complete: Lobby fully functional (team self-assignment, host config, Start Game).
+> Run `session-execute` to continue with Phase 3 (Multiplayer Game Loop).
 > Deploy with `npm run deploy` (requires `VITE_FIREBASE_*` vars in `.env.local`)

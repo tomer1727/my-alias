@@ -15,6 +15,9 @@ export default function App() {
     handleGoHome,
     handleGoCreate,
     handleGoJoin,
+    handleJoinTeam,
+    handleUpdateConfig,
+    handleStartGame,
   } = useGame()
 
   if (screen === 'home') {
@@ -50,6 +53,9 @@ export default function App() {
         game={game}
         roomCode={roomCode}
         playerId={playerId}
+        onJoinTeam={handleJoinTeam}
+        onUpdateConfig={handleUpdateConfig}
+        onStartGame={handleStartGame}
       />
     )
   }

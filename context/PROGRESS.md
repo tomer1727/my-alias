@@ -4,7 +4,7 @@
 
 ```
 Phase 1 — Complete
-Phase 2 — Not started
+Phase 2 — Complete
 Phase 3 — Not started
 Phase 4 — Not started
 Phase 5 — Not started
@@ -23,11 +23,11 @@ Phase 5 — Not started
 - [x] Create `.env.example` documenting required `VITE_FIREBASE_*` variable names
 
 ### Phase 2 — Lobby
-- [ ] Build `LobbyScreen` — player list grouped by team A / B, self-assign buttons
-- [ ] "Start Game" button visible to host only; enabled when both teams have ≥1 player
-- [ ] Host config in lobby: timer duration + target score
-- [ ] Firebase `onDisconnect` — write `connected: false` on player disconnect
-- [ ] Host disconnection detection — show overlay when host disconnects
+- [x] Build `LobbyScreen` — player list grouped by team A / B, self-assign buttons
+- [x] "Start Game" button visible to host only; enabled when both teams have ≥1 player
+- [x] Host config in lobby: timer duration + target score
+- [x] Firebase `onDisconnect` — write `connected: false` on player disconnect
+- [x] Host disconnection detection — show overlay when host disconnects
 
 ### Phase 3 — Multiplayer Game Loop
 - [ ] `PreTurnScreen` — upcoming describer's name + team; tap Start writes `startedAt` to Firebase
@@ -53,12 +53,17 @@ Phase 5 — Not started
 ## Completed Work
 
 [2026-03-23] — Phase 1 complete: Firebase wired up, room create/join flow working end-to-end with real-time sync
+[2026-03-23] — Phase 2 complete: Lobby with team self-assignment, host config (timer + target score steppers), Start Game flow, host disconnect overlay
 
 ## Implementation Decisions
 
 [2026-03-23] — `CreateScreen` collects nickname only; timer/target score config moved to lobby (Phase 2)
 [2026-03-23] — Used `crypto.randomUUID()` for `playerId` generation instead of adding a `uuid` package dependency
 [2026-03-23] — Firebase database rules set to open read/write on `games/$roomCode` for development; Phase 5 will tighten
+[2026-03-23] — Phase 2, Task 4 (onDisconnect) was already implemented in Phase 1 via `registerDisconnect`; marked complete
+[2026-03-23] — Host disconnect overlay (Phase 2, Task 5) is lobby-only for now; full in-game overlay deferred to Phase 5
+[2026-03-23] — `handleStartGame` initializes `currentTurn` (team A, first describer) when starting; Phase 3 `PreTurnScreen` reads it directly
+[2026-03-23] — Team players shown in Firebase key insertion order; consistent across all clients
 
 ## Open Questions / Blockers
 
@@ -66,7 +71,7 @@ _(none)_
 
 ## Next Session
 
-Start Phase 2 — Lobby: team self-assignment, host config (timer + target score), host disconnect detection
+Start Phase 3 — Multiplayer Game Loop: PreTurnScreen, describer GameScreen, viewer GameScreen, Correct/Skip/Steal actions, timer expiry + last word handling
 
 ---
 
