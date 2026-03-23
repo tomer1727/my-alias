@@ -3,7 +3,7 @@
 ## Current Status
 
 ```
-Phase 1 — Not started
+Phase 1 — Complete
 Phase 2 — Not started
 Phase 3 — Not started
 Phase 4 — Not started
@@ -13,14 +13,14 @@ Phase 5 — Not started
 ## Phase Progress
 
 ### Phase 1 — Firebase Setup + Room Create/Join
-- [ ] Install `firebase` package
-- [ ] Create `firebase/config.ts` — init app using `VITE_FIREBASE_*` env vars
-- [ ] Create `firebase/game.ts` — `createGame()`, `joinGame()`, `subscribeToGame()`, `updateGame()` helpers
-- [ ] Implement `utils/roomCode.ts` — 6-letter random uppercase code + collision check
-- [ ] Implement `utils/seededShuffle.ts` — seeded Fisher-Yates (mulberry32 PRNG)
-- [ ] Build `HomeScreen`, `CreateScreen`, `JoinScreen`
-- [ ] Wire `App.tsx` to use `useGame.ts` hook; remove old single-player state
-- [ ] Create `.env.example` documenting required `VITE_FIREBASE_*` variable names
+- [x] Install `firebase` package
+- [x] Create `firebase/config.ts` — init app using `VITE_FIREBASE_*` env vars
+- [x] Create `firebase/game.ts` — `createGame()`, `joinGame()`, `subscribeToGame()`, `updateGame()` helpers
+- [x] Implement `utils/roomCode.ts` — 6-letter random uppercase code + collision check
+- [x] Implement `utils/seededShuffle.ts` — seeded Fisher-Yates (mulberry32 PRNG)
+- [x] Build `HomeScreen`, `CreateScreen`, `JoinScreen`
+- [x] Wire `App.tsx` to use `useGame.ts` hook; remove old single-player state
+- [x] Create `.env.example` documenting required `VITE_FIREBASE_*` variable names
 
 ### Phase 2 — Lobby
 - [ ] Build `LobbyScreen` — player list grouped by team A / B, self-assign buttons
@@ -52,19 +52,21 @@ Phase 5 — Not started
 
 ## Completed Work
 
-_(nothing yet this version)_
+[2026-03-23] — Phase 1 complete: Firebase wired up, room create/join flow working end-to-end with real-time sync
 
 ## Implementation Decisions
 
-_(none yet)_
+[2026-03-23] — `CreateScreen` collects nickname only; timer/target score config moved to lobby (Phase 2)
+[2026-03-23] — Used `crypto.randomUUID()` for `playerId` generation instead of adding a `uuid` package dependency
+[2026-03-23] — Firebase database rules set to open read/write on `games/$roomCode` for development; Phase 5 will tighten
 
 ## Open Questions / Blockers
 
-- Firebase project and `.env.local` must be set up by the developer before Phase 1 can run — see `context/PREREQUISITES.md`
+_(none)_
 
 ## Next Session
 
-Start Phase 1 — Firebase setup + room create/join flow
+Start Phase 2 — Lobby: team self-assignment, host config (timer + target score), host disconnect detection
 
 ---
 

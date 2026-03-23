@@ -23,7 +23,7 @@ src/
     useGame.ts      # Firebase subscription + all game state and actions
   firebase/
     config.ts       # Firebase app init (reads VITE_FIREBASE_* env vars)
-    game.ts         # createGame, joinGame, subscribeToGame, updateGame helpers
+    game.ts         # createGame, joinGame, subscribeToGame, updateGame, registerDisconnect helpers
   utils/
     seededShuffle.ts  # Deterministic Fisher-Yates with mulberry32 PRNG
     roomCode.ts       # 6-letter uppercase room code generation + collision check
@@ -59,7 +59,7 @@ context/archive/PLAN_v1.md — Archived v1 plan (all phases complete)
 
 ## Current Focus
 
-> v2 Multiplayer — Phase 1 not started
-> Complete Firebase setup first: see `context/PREREQUISITES.md`
-> Then run `session-execute` to start building.
+> v2 Multiplayer — Phase 2 not started
+> Phase 1 complete: Firebase wired, create/join flow live.
+> Run `session-execute` to continue with Phase 2 (Lobby).
 > Deploy with `npm run deploy` (requires `VITE_FIREBASE_*` vars in `.env.local`)
