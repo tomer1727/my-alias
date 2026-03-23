@@ -3,60 +3,80 @@
 ## Current Status
 
 ```
-Phase 1 — Complete
-Phase 2 — Complete
-Phase 3 — Complete
+Phase 1 — Not started
+Phase 2 — Not started
+Phase 3 — Not started
+Phase 4 — Not started
+Phase 5 — Not started
 ```
 
 ## Phase Progress
 
-### Phase 1 — Configurable Timer
-- [x] Add `timerDuration: number` to `GameState` (default 60)
-- [x] Update Start screen with 30 / 60 / 90 / Custom selector
-- [x] Pass `timerDuration` into `GameScreen`, replacing hardcoded 60
+### Phase 1 — Firebase Setup + Room Create/Join
+- [ ] Install `firebase` package
+- [ ] Create `firebase/config.ts` — init app using `VITE_FIREBASE_*` env vars
+- [ ] Create `firebase/game.ts` — `createGame()`, `joinGame()`, `subscribeToGame()`, `updateGame()` helpers
+- [ ] Implement `utils/roomCode.ts` — 6-letter random uppercase code + collision check
+- [ ] Implement `utils/seededShuffle.ts` — seeded Fisher-Yates (mulberry32 PRNG)
+- [ ] Build `HomeScreen`, `CreateScreen`, `JoinScreen`
+- [ ] Wire `App.tsx` to use `useGame.ts` hook; remove old single-player state
+- [ ] Create `.env.example` documenting required `VITE_FIREBASE_*` variable names
 
-### Phase 2 — Score Tracking
-- [x] Add `gameTotals: { correct: number; skip: number; steal: number }` to `GameState`
-- [x] Accumulate current turn into totals on `onEndTurn` in `App.tsx`
-- [x] Update Results screen — two sections: "This Turn" + "Game Total" with score = correct − skipped
-- [x] Add "New Game" button to Results screen (resets totals + reshuffles deck)
+### Phase 2 — Lobby
+- [ ] Build `LobbyScreen` — player list grouped by team A / B, self-assign buttons
+- [ ] "Start Game" button visible to host only; enabled when both teams have ≥1 player
+- [ ] Host config in lobby: timer duration + target score
+- [ ] Firebase `onDisconnect` — write `connected: false` on player disconnect
+- [ ] Host disconnection detection — show overlay when host disconnects
 
-### Phase 3 — GitHub Pages Deployment + Mobile Validation
-- [x] Configure `vite.config.ts` `base` for GitHub Pages
-- [x] Add `gh-pages` package + `deploy` script to `package.json`
-- [x] Write deployment guide (repo setup → push → enable Pages)
-- [x] Mobile validation pass — viewport, tap targets, no horizontal scroll
+### Phase 3 — Multiplayer Game Loop
+- [ ] `PreTurnScreen` — upcoming describer's name + team; tap Start writes `startedAt` to Firebase
+- [ ] Describer `GameScreen` — word, Correct/Skip/Steal, timer from `startedAt`
+- [ ] Viewer `GameScreen` — timer, scores, whose turn — no word, no buttons
+- [ ] Correct/Skip/Steal actions write to `currentTurn.entries`, increment `deckIndex`
+- [ ] Timer expiry: describer writes `lastWord: true` when remaining ≤ 0
+- [ ] Last word handling: Steal activates; any action writes `phase: 'results'`
+
+### Phase 4 — Turn Results + Score + Win
+- [ ] `TurnResultsScreen` — turn summary + team scores; "Start Next Turn" for next describer
+- [ ] "Start Next Turn" accumulates score, advances turn rotation, clears `currentTurn`
+- [ ] Win check: if `score >= targetScore`, write `winner` and `status: 'finished'`
+- [ ] `WinScreen` — winning team, final scores, Play Again
+
+### Phase 5 — Polish + Edge Cases
+- [ ] Reconnection: check `localStorage` for `playerId`, re-subscribe to active game
+- [ ] "Host disconnected" blocking overlay
+- [ ] Stale game cleanup — write `createdAt`, document manual cleanup
+- [ ] Update deploy docs — `VITE_FIREBASE_*` vars required at build time
+- [ ] Firebase security rules — lock down `games/{roomCode}`
 
 ## Completed Work
 
 _(nothing yet this version)_
 
-[2026-03-21] — Phase 1 + 2 complete: configurable timer stepper on Start screen, gameTotals accumulation, Results screen with "This Turn" + "Game Total" sections, score display, New Game button
-[2026-03-21] — Phase 3 complete: GitHub Pages deployment configured, gh-pages deploy script added, deployment guide written, mobile CSS hardened
-
 ## Implementation Decisions
 
-[2026-03-21] — Timer selector implemented as +/− stepper (10s steps, 10s–300s range, default 60s) instead of preset buttons — simpler and more flexible
-[2026-03-21] — gameTotals accumulated at the point of phase transition to results (inside `recordAndAdvance` on lastWord) — avoids needing a separate `onEndTurn` handler
-[2026-03-21] — "New Game" reshuffles deck and resets totals but preserves `timerDuration` from the current game
-[2026-03-21] — SSH host alias `github-second` configured for deploying as tomer1727 from this machine
+_(none yet)_
 
 ## Open Questions / Blockers
 
-_(none)_
+- Firebase project and `.env.local` must be set up by the developer before Phase 1 can run — see `context/PREREQUISITES.md`
 
 ## Next Session
 
-Plan complete — run expand-project if you want to plan the next version
+Start Phase 1 — Firebase setup + room create/join flow
 
 ---
 
 ## Previous Version Summary
 
-- Built complete game flow: Start screen → 60s game screen → Results screen
-- Correct / Skip / Steal buttons with steal-on-last-word mechanic
-- Shuffled deck persists across turns; wraps around when exhausted
-- Timer with color coding (green → orange → red) and pulse animation for last 5s
-- Full visual polish — mobile-friendly layout, tinted stat cards on Results screen
-- 100 Hebrew phrases (80 single words + 20 two-word phrases, ~50/50 easy/hard, 10 categories)
-- All state in `App.tsx`; screens are stateless and receive props only
+- v1 was a single-player turn manager: Start screen → Game screen → Results screen
+- Configurable timer (stepper, 10s–300s, default 60s)
+- Score tracking: "This Turn" + "Game Total" sections on Results screen; score = correct − skipped
+- New Game button resets totals, reshuffles deck, preserves timer setting
+- Timer implemented as `setInterval` countdown with color coding (green → orange → red) and last-5s pulse
+- Shuffled deck persists across turns within a game; wraps around when exhausted
+- ~600 Hebrew phrases (started at 100, grew to ~600 via manual additions)
+- All state owned by `App.tsx`; screens were stateless props receivers
+- Deployed to GitHub Pages via `npm run deploy` (gh-pages package)
+- SSH alias `github-second` used to deploy as tomer1727 from this machine

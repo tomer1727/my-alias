@@ -1,8 +1,8 @@
 # Alias Game
 
 A browser-based Alias word-guessing game for personal use with friends over video call.
-No backend, no auth, no real-time sync — purely a static web app deployed to GitHub Pages.
-Features: configurable turn timer, per-turn and cumulative score tracking, 100 Hebrew phrases.
+Real-time multiplayer via Firebase Realtime Database — players join a shared room by code, teams alternate turns, first to the target score wins.
+~600 Hebrew phrases, configurable timer, deployed to GitHub Pages.
 
 ## Tech Stack
 
@@ -10,39 +10,56 @@ Features: configurable turn timer, per-turn and cumulative score tracking, 100 H
 - TypeScript
 - Vite
 - CSS (plain, no framework)
+- Firebase Realtime Database (real-time game state sync)
 
 ## Project Structure
 
 ```
 src/
-  components/       # Screen components (StartScreen, GameScreen, ResultsScreen)
-  types.ts          # Shared TypeScript types
-  phrases.ts        # Full phrase bank (plain string array)
-  App.tsx           # Top-level state and phase switching
+  screens/          # Screen components (HomeScreen, CreateScreen, JoinScreen,
+                    #   LobbyScreen, PreTurnScreen, GameScreen,
+                    #   TurnResultsScreen, WinScreen)
+  hooks/
+    useGame.ts      # Firebase subscription + all game state and actions
+  firebase/
+    config.ts       # Firebase app init (reads VITE_FIREBASE_* env vars)
+    game.ts         # createGame, joinGame, subscribeToGame, updateGame helpers
+  utils/
+    seededShuffle.ts  # Deterministic Fisher-Yates with mulberry32 PRNG
+    roomCode.ts       # 6-letter uppercase room code generation + collision check
+  types.ts          # Shared TypeScript types (Firebase data model)
+  phrases.ts        # Full phrase bank (plain string array, ~600 phrases)
+  App.tsx           # Thin router — reads phase from useGame, renders correct screen
   main.tsx          # Vite entry point
 context/            # Project planning docs
+  PREREQUISITES.md  # Firebase setup guide — complete this before Phase 1
 ```
 
 ## Key Conventions
 
-- All game state lives in `App.tsx` — screens are stateless and receive props
-- Phase switching is controlled by a `phase` field: `'start' | 'game' | 'results'`
-- The shuffled deck and deck index persist across turns within a single game
-- `gameTotals` accumulates correct/skip/steal counts across all turns; score = correct − skipped
-- `timerDuration` (seconds) is selected on Start screen and passed through to GameScreen
+- All game state lives in Firebase and is read via `useGame.ts` hook — screens receive props only
+- `App.tsx` is a thin router; it does not own game state
+- Timer sync: `startedAt` timestamp stored in Firebase; each client computes `remaining = timerDuration - (Date.now() - startedAt)` locally
+- Deck sync: `deckSeed` stored in Firebase; all clients run the same seeded Fisher-Yates shuffle locally — only `deckIndex` is synced
+- `playerId` (UUID) is stored in `localStorage` for reconnection without login
 - Phrases are a plain `string[]` in `phrases.ts` — no metadata, no IDs
 - Mobile-friendly layout — game is played on phones while on a video call
+- Firebase config injected at build time via `VITE_FIREBASE_*` env vars in `.env.local`
 
 ## Context Files
 
 ```
-context/PLAN.md         — Implementation plan and phases
-context/ARCHITECTURE.md — System design and technical decisions
-context/PROGRESS.md     — Session tracking and current status
-context/BACKLOG.md      — Future features and ideas
+context/PLAN.md           — Implementation plan and phases (v2)
+context/ARCHITECTURE.md   — System design and technical decisions
+context/PROGRESS.md       — Session tracking and current status
+context/BACKLOG.md        — Future features and ideas
+context/PREREQUISITES.md  — Firebase setup steps (complete before Phase 1)
+context/archive/PLAN_v1.md — Archived v1 plan (all phases complete)
 ```
 
 ## Current Focus
 
-> All phases complete — app is deployed to https://tomer1727.github.io/my-alias/
-> Run `npm run deploy` to publish updates. Run expand-project to plan the next version.
+> v2 Multiplayer — Phase 1 not started
+> Complete Firebase setup first: see `context/PREREQUISITES.md`
+> Then run `session-execute` to start building.
+> Deploy with `npm run deploy` (requires `VITE_FIREBASE_*` vars in `.env.local`)
