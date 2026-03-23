@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import type { Game, AppScreen, Team } from '../types'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import type { Game, AppScreen, Team, TurnEntry } from '../types'
 import {
   createGame,
   joinGame,
@@ -9,6 +9,8 @@ import {
   updateGame,
 } from '../firebase/game'
 import { generateRoomCode } from '../utils/roomCode'
+import { seededShuffle } from '../utils/seededShuffle'
+import phrases from '../phrases'
 
 const PLAYER_ID_KEY = 'alias_player_id'
 
@@ -26,6 +28,8 @@ export type GameHook = {
   game: Game | null
   roomCode: string
   playerId: string
+  currentWord: string | null
+  isDescriber: boolean
   handleCreateGame: (nickname: string) => Promise<void>
   handleJoinGame: (code: string, nickname: string) => Promise<void>
   handleGoHome: () => void
@@ -34,6 +38,9 @@ export type GameHook = {
   handleJoinTeam: (team: Team) => Promise<void>
   handleUpdateConfig: (key: 'timerDuration' | 'targetScore', value: number) => Promise<void>
   handleStartGame: () => Promise<void>
+  handleStartTurn: () => Promise<void>
+  handleWordAction: (result: TurnEntry['result']) => Promise<void>
+  handleTimerExpired: () => Promise<void>
 }
 
 export function useGame(): GameHook {
@@ -52,13 +59,29 @@ export function useGame(): GameHook {
     return unsubscribe
   }, [roomCode])
 
-  // Derive screen from game status (once subscribed)
+  // Derive screen from game status and currentTurn.phase
   useEffect(() => {
     if (!game) return
-    if (game.status === 'lobby') setScreen('lobby')
-    else if (game.status === 'playing') setScreen('preTurn')
-    else if (game.status === 'finished') setScreen('win')
-  }, [game?.status])
+    if (game.status === 'lobby') {
+      setScreen('lobby')
+    } else if (game.status === 'playing') {
+      const phase = game.currentTurn?.phase
+      if (phase === 'waiting') setScreen('preTurn')
+      else if (phase === 'active') setScreen('game')
+      else if (phase === 'results') setScreen('turnResults')
+    } else if (game.status === 'finished') {
+      setScreen('win')
+    }
+  }, [game?.status, game?.currentTurn?.phase])
+
+  // Compute shuffled deck from deckSeed (stable for the whole game)
+  const shuffledDeck = useMemo(
+    () => game ? seededShuffle(phrases, game.deckSeed) : [],
+    [game?.deckSeed],
+  )
+
+  const currentWord = game ? (shuffledDeck[game.deckIndex] ?? null) : null
+  const isDescriber = !!game && game.currentTurn?.describerId === playerId
 
   const handleCreateGame = useCallback(async (nickname: string) => {
     const code = await generateRoomCode()
@@ -112,5 +135,35 @@ export function useGame(): GameHook {
     console.log(`Lobby: game started — first describer=${game.players[firstDescriberId]?.name}`)
   }, [roomCode, game])
 
-  return { screen, game, roomCode, playerId, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleJoinTeam, handleUpdateConfig, handleStartGame }
+  const handleStartTurn = useCallback(async () => {
+    await updateGame(roomCode, {
+      'currentTurn/startedAt': Date.now(),
+      'currentTurn/phase': 'active',
+    })
+    console.log('PreTurn: turn started')
+  }, [roomCode])
+
+  const handleWordAction = useCallback(async (result: TurnEntry['result']) => {
+    if (!game) return
+    const word = shuffledDeck[game.deckIndex]
+    const entries: TurnEntry[] = Array.isArray(game.currentTurn.entries) ? game.currentTurn.entries : []
+    const isLastWord = game.currentTurn.lastWord
+    const updates: Record<string, unknown> = {
+      [`currentTurn/entries/${entries.length}`]: { word, result },
+      deckIndex: game.deckIndex + 1,
+    }
+    if (isLastWord) {
+      updates['currentTurn/phase'] = 'results'
+    }
+    await updateGame(roomCode, updates)
+    console.log(`Game: word action — "${word}" → ${result}${isLastWord ? ' (last word, phase→results)' : ''}`)
+  }, [roomCode, game, shuffledDeck])
+
+  const handleTimerExpired = useCallback(async () => {
+    if (!game || game.currentTurn.lastWord) return
+    await updateGame(roomCode, { 'currentTurn/lastWord': true })
+    console.log('Game: timer expired — last word active')
+  }, [roomCode, game])
+
+  return { screen, game, roomCode, playerId, currentWord, isDescriber, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleJoinTeam, handleUpdateConfig, handleStartGame, handleStartTurn, handleWordAction, handleTimerExpired }
 }

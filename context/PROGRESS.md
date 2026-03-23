@@ -5,7 +5,7 @@
 ```
 Phase 1 — Complete
 Phase 2 — Complete
-Phase 3 — Not started
+Phase 3 — Complete
 Phase 4 — Not started
 Phase 5 — Not started
 ```
@@ -30,12 +30,12 @@ Phase 5 — Not started
 - [x] Host disconnection detection — show overlay when host disconnects
 
 ### Phase 3 — Multiplayer Game Loop
-- [ ] `PreTurnScreen` — upcoming describer's name + team; tap Start writes `startedAt` to Firebase
-- [ ] Describer `GameScreen` — word, Correct/Skip/Steal, timer from `startedAt`
-- [ ] Viewer `GameScreen` — timer, scores, whose turn — no word, no buttons
-- [ ] Correct/Skip/Steal actions write to `currentTurn.entries`, increment `deckIndex`
-- [ ] Timer expiry: describer writes `lastWord: true` when remaining ≤ 0
-- [ ] Last word handling: Steal activates; any action writes `phase: 'results'`
+- [x] `PreTurnScreen` — upcoming describer's name + team; tap Start writes `startedAt` to Firebase
+- [x] Describer `GameScreen` — word, Correct/Skip/Steal, timer from `startedAt`
+- [x] Viewer `GameScreen` — timer, scores, whose turn — no word, no buttons
+- [x] Correct/Skip/Steal actions write to `currentTurn.entries`, increment `deckIndex`
+- [x] Timer expiry: describer writes `lastWord: true` when remaining ≤ 0
+- [x] Last word handling: Steal activates; any action writes `phase: 'results'`
 
 ### Phase 4 — Turn Results + Score + Win
 - [ ] `TurnResultsScreen` — turn summary + team scores; "Start Next Turn" for next describer
@@ -54,6 +54,7 @@ Phase 5 — Not started
 
 [2026-03-23] — Phase 1 complete: Firebase wired up, room create/join flow working end-to-end with real-time sync
 [2026-03-23] — Phase 2 complete: Lobby with team self-assignment, host config (timer + target score steppers), Start Game flow, host disconnect overlay
+[2026-03-23] — Phase 3 complete: PreTurnScreen, describer + viewer GameScreen, Correct/Skip/Steal actions, timer expiry, last-word handling; TurnResultsScreen placeholder added
 
 ## Implementation Decisions
 
@@ -64,6 +65,10 @@ Phase 5 — Not started
 [2026-03-23] — Host disconnect overlay (Phase 2, Task 5) is lobby-only for now; full in-game overlay deferred to Phase 5
 [2026-03-23] — `handleStartGame` initializes `currentTurn` (team A, first describer) when starting; Phase 3 `PreTurnScreen` reads it directly
 [2026-03-23] — Team players shown in Firebase key insertion order; consistent across all clients
+[2026-03-23] — Timer runs as setInterval in GameScreen (client-side); only the describer's device writes `lastWord: true` when remaining hits 0
+[2026-03-23] — Entries appended to Firebase by index (`currentTurn/entries/${length}`); single-writer (describer only) avoids race conditions
+[2026-03-23] — Steal button disabled by default, activates only when `lastWord: true`; any button tap on last word writes `phase: 'results'`
+[2026-03-23] — TurnResultsScreen is a placeholder (shows entries + current scores); full score accumulation + turn rotation deferred to Phase 4
 
 ## Open Questions / Blockers
 
@@ -71,7 +76,7 @@ _(none)_
 
 ## Next Session
 
-Start Phase 3 — Multiplayer Game Loop: PreTurnScreen, describer GameScreen, viewer GameScreen, Correct/Skip/Steal actions, timer expiry + last word handling
+Start Phase 4 — Turn Results + Score + Win: TurnResultsScreen (full), score accumulation + turn rotation, win check, WinScreen
 
 ---
 

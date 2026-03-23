@@ -59,7 +59,7 @@ context/archive/PLAN_v1.md — Archived v1 plan (all phases complete)
 
 ## Current Focus
 
-> v2 Multiplayer — Phase 3 not started
-> Phase 2 complete: Lobby fully functional (team self-assignment, host config, Start Game).
-> Run `session-execute` to continue with Phase 3 (Multiplayer Game Loop).
+> v2 Multiplayer — Phase 4 not started
+> Phase 3 complete: full game turn loop (PreTurnScreen, GameScreen describer/viewer, Correct/Skip/Steal, timer expiry, last-word handling). TurnResultsScreen is a placeholder.
+> Run `session-execute` to continue with Phase 4 (Turn Results + Score + Win).
 > Deploy with `npm run deploy` (requires `VITE_FIREBASE_*` vars in `.env.local`)

@@ -667,3 +667,97 @@ body {
   width: 100%;
   max-width: 320px;
 }
+
+/* ── Pre-turn screen ───────────────────────────────────── */
+
+.pre-turn-screen {
+  gap: 1rem;
+  text-align: center;
+}
+
+.pre-turn-team {
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #64748b;
+}
+
+.pre-turn-name {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #1e293b;
+  line-height: 1.1;
+}
+
+.pre-turn-label {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+}
+
+.pre-turn-waiting {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ── Game screen additions ─────────────────────────────── */
+
+.game-scores {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.game-score-chip {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 800;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 2px solid transparent;
+}
+
+.game-score-chip--active {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #22c55e;
+}
+
+.game-last-word-badge {
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+}
+
+.game-viewer-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+}
+
+/* ── Turn results additions ────────────────────────────── */
+
+.results-scores {
+  width: 100%;
+  border-top: 2px solid #e2e8f0;
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.results-placeholder-note {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.5rem;
+}
