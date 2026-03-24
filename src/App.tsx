@@ -16,11 +16,15 @@ export default function App() {
     playerId,
     currentWord,
     nextDescriberId,
+    reconnectMessage,
+    pendingReconnect,
     handleCreateGame,
     handleJoinGame,
     handleGoHome,
     handleGoCreate,
     handleGoJoin,
+    handleReconnect,
+    handleDismissReconnect,
     handleJoinTeam,
     handleUpdateConfig,
     handleStartGame,
@@ -36,6 +40,10 @@ export default function App() {
       <HomeScreen
         onCreateGame={handleGoCreate}
         onJoinGame={handleGoJoin}
+        reconnectMessage={reconnectMessage}
+        pendingReconnect={pendingReconnect}
+        onReconnect={handleReconnect}
+        onDismissReconnect={handleDismissReconnect}
       />
     )
   }

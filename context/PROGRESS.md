@@ -7,7 +7,7 @@ Phase 1 — Complete
 Phase 2 — Complete
 Phase 3 — Complete
 Phase 4 — Complete
-Phase 5 — Not started
+Phase 5 — Complete
 ```
 
 ## Phase Progress
@@ -44,18 +44,18 @@ Phase 5 — Not started
 - [x] `WinScreen` — winning team, final scores, Play Again
 
 ### Phase 5 — Polish + Edge Cases
-- [ ] Reconnection: check `localStorage` for `playerId`, re-subscribe to active game
-- [ ] "Host disconnected" blocking overlay
-- [ ] Stale game cleanup — write `createdAt`, document manual cleanup
-- [ ] Update deploy docs — `VITE_FIREBASE_*` vars required at build time
-- [ ] Firebase security rules — lock down `games/{roomCode}`
+- [x] Reconnection: check `localStorage` for `playerId`, re-subscribe to active game
+- [x] "Host disconnected" blocking overlay
+- [x] Stale game cleanup — write `createdAt`, document manual cleanup
+- [x] Update deploy docs — `VITE_FIREBASE_*` vars required at build time
+- [x] Firebase security rules — lock down `games/{roomCode}`
 
 ## Completed Work
 
 [2026-03-23] — Phase 1 complete: Firebase wired up, room create/join flow working end-to-end with real-time sync
 [2026-03-23] — Phase 2 complete: Lobby with team self-assignment, host config (timer + target score steppers), Start Game flow, host disconnect overlay
 [2026-03-23] — Phase 3 complete: PreTurnScreen, describer + viewer GameScreen, Correct/Skip/Steal actions, timer expiry, last-word handling; TurnResultsScreen placeholder added
-[2026-03-23] — Phase 4 complete: TurnResultsScreen (score preview + Start Next Turn), score accumulation (correct+1/skip-1/steal+1 other), win check, WinScreen, Play Again; win-state UX fix (game-over banner + "Show Final Results" for host instead of misleading "Start Next Turn")
+[2026-03-24] — Phase 5 complete: reconnection prompt on HomeScreen, host-disconnect overlay on GameScreen, stale game cleanup docs, deploy docs in README, Firebase open rules acknowledged
 
 ## Implementation Decisions
 
@@ -73,6 +73,9 @@ Phase 5 — Not started
 [2026-03-23] — Scoring: correct +1, skip -1, steal +1 for opposing team
 [2026-03-23] — Play Again resets to lobby and clears all team assignments
 [2026-03-23] — When game-winning turn ends, TurnResultsScreen shows game-over banner + "Show Final Results" (host only) instead of "Start Next Turn" — prevents confusing UX where next describer would navigate everyone to WinScreen
+[2026-03-24] — Reconnection is opt-in: on load, check localStorage for stored roomCode; if room exists and player is in it, show "Rejoin room X?" card on HomeScreen instead of auto-navigating — prevents players getting stuck in a room they didn't choose to rejoin
+[2026-03-24] — Firebase open rules kept as-is; documented as intentional for personal-use tool in README
+[2026-03-24] — Host disconnect overlay reuses existing `.lobby-overlay` CSS classes from LobbyScreen
 
 ## Open Questions / Blockers
 
@@ -80,7 +83,7 @@ _(none)_
 
 ## Next Session
 
-Start Phase 5 — Polish + Edge Cases: reconnection, host-disconnect in-game overlay, stale game cleanup, deploy docs, Firebase security rules
+Plan complete — run expand-project if you want to plan the next version
 
 ---
 

@@ -59,7 +59,7 @@ context/archive/PLAN_v1.md — Archived v1 plan (all phases complete)
 
 ## Current Focus
 
-> v2 Multiplayer — Phase 5 not started
-> Phase 4 complete: TurnResultsScreen with score preview + "Start Next Turn", score accumulation, win detection, WinScreen, Play Again.
-> Run `session-execute` to continue with Phase 5 (Polish + Edge Cases).
+> v2 Multiplayer — All phases complete
+> Phase 5 complete: reconnection prompt, host-disconnect overlay on GameScreen, deploy docs, Firebase rules documented.
+> Run `expand-project` to plan the next version.
 > Deploy with `npm run deploy` (requires `VITE_FIREBASE_*` vars in `.env.local`)

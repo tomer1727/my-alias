@@ -87,6 +87,46 @@ body {
   align-items: center;
 }
 
+.home-reconnect-msg {
+  font-size: 0.9rem;
+  color: #dc2626;
+  text-align: center;
+  max-width: 280px;
+}
+
+.home-rejoin-card {
+  background: #f0fdf4;
+  border: 1.5px solid #22c55e;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.home-rejoin-text {
+  font-size: 0.95rem;
+  color: #1e293b;
+  text-align: center;
+}
+
+.home-rejoin-actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.home-rejoin-actions .btn-primary,
+.home-rejoin-actions .btn-secondary {
+  padding: 0.65rem 1.75rem;
+  border-radius: 999px;
+  font-size: 1rem;
+}
+
 /* ── Entry screens (Create / Join) ─────────────────────── */
 
 .entry-screen {

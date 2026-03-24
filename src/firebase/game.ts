@@ -24,6 +24,11 @@ export async function gameExists(roomCode: string): Promise<boolean> {
   return snap.exists()
 }
 
+export async function getGame(roomCode: string): Promise<Game | null> {
+  const snap = await get(gameRef(roomCode))
+  return snap.exists() ? (snap.val() as Game) : null
+}
+
 // ── Create ───────────────────────────────────────────────
 
 export async function createGame(
@@ -35,7 +40,7 @@ export async function createGame(
   const game: Game = {
     status: 'lobby',
     hostId,
-    createdAt: Date.now(),
+    createdAt: Date.now(), // used to identify stale games; clean up old rooms manually via Firebase console
     config: {
       timerDuration: 60,
       targetScore: 30,

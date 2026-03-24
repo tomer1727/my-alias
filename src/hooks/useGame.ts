@@ -6,6 +6,7 @@ import {
   subscribeToGame,
   registerDisconnect,
   gameExists,
+  getGame,
   updateGame,
 } from '../firebase/game'
 import { generateRoomCode } from '../utils/roomCode'
@@ -13,6 +14,7 @@ import { seededShuffle } from '../utils/seededShuffle'
 import phrases from '../phrases'
 
 const PLAYER_ID_KEY = 'alias_player_id'
+const ROOM_CODE_KEY = 'alias_room_code'
 
 function getOrCreatePlayerId(): string {
   let id = localStorage.getItem(PLAYER_ID_KEY)
@@ -31,11 +33,15 @@ export type GameHook = {
   currentWord: string | null
   isDescriber: boolean
   nextDescriberId: string | null
+  reconnectMessage: string | null
+  pendingReconnect: string | null
   handleCreateGame: (nickname: string) => Promise<void>
   handleJoinGame: (code: string, nickname: string) => Promise<void>
   handleGoHome: () => void
   handleGoCreate: () => void
   handleGoJoin: () => void
+  handleReconnect: () => void
+  handleDismissReconnect: () => void
   handleJoinTeam: (team: Team) => Promise<void>
   handleUpdateConfig: (key: 'timerDuration' | 'targetScore', value: number) => Promise<void>
   handleStartGame: () => Promise<void>
@@ -51,6 +57,26 @@ export function useGame(): GameHook {
   const [game, setGame] = useState<Game | null>(null)
   const [roomCode, setRoomCode] = useState('')
   const [playerId] = useState(getOrCreatePlayerId)
+  const [reconnectMessage, setReconnectMessage] = useState<string | null>(null)
+  const [pendingReconnect, setPendingReconnect] = useState<string | null>(null)
+
+  // On mount: check localStorage for a previous room and surface a rejoin prompt
+  useEffect(() => {
+    const storedCode = localStorage.getItem(ROOM_CODE_KEY)
+    if (!storedCode) return
+    getGame(storedCode).then(storedGame => {
+      if (!storedGame || !storedGame.players[playerId]) {
+        localStorage.removeItem(ROOM_CODE_KEY)
+        setReconnectMessage('Your previous room is no longer available.')
+        console.log(`useGame: reconnect failed — room ${storedCode} not found or player not in it`)
+        return
+      }
+      setPendingReconnect(storedCode)
+      console.log(`useGame: reconnect available for room ${storedCode}`)
+    }).catch(() => {
+      localStorage.removeItem(ROOM_CODE_KEY)
+    })
+  }, [playerId])
 
   // Re-subscribe when roomCode changes
   useEffect(() => {
@@ -101,6 +127,7 @@ export function useGame(): GameHook {
     const seed = Math.random().toString(36).slice(2)
     await createGame(code, playerId, nickname, seed)
     registerDisconnect(code, playerId)
+    localStorage.setItem(ROOM_CODE_KEY, code)
     setRoomCode(code)
     console.log(`useGame: created room ${code}`)
   }, [playerId])
@@ -110,11 +137,13 @@ export function useGame(): GameHook {
     if (!exists) throw new Error(`Room "${code}" not found.`)
     await joinGame(code, playerId, nickname)
     registerDisconnect(code, playerId)
+    localStorage.setItem(ROOM_CODE_KEY, code)
     setRoomCode(code)
     console.log(`useGame: joined room ${code}`)
   }, [playerId])
 
   const handleGoHome = useCallback(() => {
+    localStorage.removeItem(ROOM_CODE_KEY)
     setScreen('home')
     setGame(null)
     setRoomCode('')
@@ -122,6 +151,20 @@ export function useGame(): GameHook {
 
   const handleGoCreate = useCallback(() => setScreen('create'), [])
   const handleGoJoin = useCallback(() => setScreen('join'), [])
+
+  const handleReconnect = useCallback(() => {
+    if (!pendingReconnect) return
+    registerDisconnect(pendingReconnect, playerId)
+    setRoomCode(pendingReconnect)
+    setPendingReconnect(null)
+    console.log(`useGame: rejoined room ${pendingReconnect}`)
+  }, [pendingReconnect, playerId])
+
+  const handleDismissReconnect = useCallback(() => {
+    localStorage.removeItem(ROOM_CODE_KEY)
+    setPendingReconnect(null)
+    console.log('useGame: dismissed reconnect prompt')
+  }, [])
 
   const handleJoinTeam = useCallback(async (team: Team) => {
     await updateGame(roomCode, { [`players/${playerId}/team`]: team })
@@ -257,5 +300,5 @@ export function useGame(): GameHook {
     console.log('WinScreen: play again — reset to lobby')
   }, [roomCode, game])
 
-  return { screen, game, roomCode, playerId, currentWord, isDescriber, nextDescriberId, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleJoinTeam, handleUpdateConfig, handleStartGame, handleStartTurn, handleWordAction, handleTimerExpired, handleStartNextTurn, handlePlayAgain }
+  return { screen, game, roomCode, playerId, currentWord, isDescriber, nextDescriberId, reconnectMessage, pendingReconnect, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleReconnect, handleDismissReconnect, handleJoinTeam, handleUpdateConfig, handleStartGame, handleStartTurn, handleWordAction, handleTimerExpired, handleStartNextTurn, handlePlayAgain }
 }

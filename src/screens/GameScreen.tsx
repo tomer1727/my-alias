@@ -28,6 +28,10 @@ export default function GameScreen({
   const isDescriber = playerId === describerId
   const describerName = game.players[describerId]?.name ?? 'Unknown'
 
+  const isHost = playerId === game.hostId
+  const hostConnected = game.players[game.hostId]?.connected !== false
+  const showHostOverlay = !isHost && !hostConnected
+
   const [remaining, setRemaining] = useState(timerDuration)
   const expiredCalledRef = useRef(false)
 
@@ -64,6 +68,14 @@ export default function GameScreen({
   if (isDescriber) {
     return (
       <div className="screen game-screen">
+        {showHostOverlay && (
+          <div className="lobby-overlay">
+            <div className="lobby-overlay-card">
+              <p className="lobby-overlay-title">Host disconnected</p>
+              <p className="lobby-overlay-sub">Waiting for host to reconnect…</p>
+            </div>
+          </div>
+        )}
         <div className="game-scores">
           <span className={`game-score-chip${team === 'A' ? ' game-score-chip--active' : ''}`}>
             A: {teamAScore}
@@ -121,6 +133,14 @@ export default function GameScreen({
   // ── Viewer view ─────────────────────────────────────────
   return (
     <div className="screen game-screen">
+      {showHostOverlay && (
+        <div className="lobby-overlay">
+          <div className="lobby-overlay-card">
+            <p className="lobby-overlay-title">Host disconnected</p>
+            <p className="lobby-overlay-sub">Waiting for host to reconnect…</p>
+          </div>
+        </div>
+      )}
       <div className="game-scores">
         <span className={`game-score-chip${team === 'A' ? ' game-score-chip--active' : ''}`}>
           A: {teamAScore}
