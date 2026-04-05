@@ -60,9 +60,3 @@ context/PREREQUISITES.md  — Firebase setup steps (complete before Phase 1)
 context/archive/PLAN_v1.md — Archived v1 plan (all phases complete)
 context/archive/PLAN_v2.md — Archived v2 plan (all phases complete)
 ```
-
-## Current Focus
-
-> v3 — Live viewer feedback + editable turn entries
-> Phase 1 (live viewer feedback) and Phase 2 (editable entries) are independent and can run in parallel.
-> Deploy with `npm run deploy` (requires `VITE_FIREBASE_*` vars in `.env.local`)

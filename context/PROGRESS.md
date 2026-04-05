@@ -1,19 +1,12 @@
 # Progress
 
-## Current Status
-
-```
-Phase 1 — Live viewer feedback    — Not started
-Phase 2 — Editable entries        — Not started
-```
-
 ## Phase Progress
 
 ### Phase 1 — Live viewer feedback
-- [ ] Derive running turn score from `currentTurn.entries` in viewer GameScreen
-- [ ] Display "This turn: +N" alongside the game total in viewer view
-- [ ] Detect new entry additions and trigger badge animation
-- [ ] Build fade-out +1 / −1 badge component
+- [x] Derive running turn score from `currentTurn.entries` in viewer GameScreen
+- [x] Display "This turn: +N" alongside the game total in viewer view
+- [x] Detect new entry additions and trigger badge animation
+- [x] Build fade-out +1 / −1 badge component
 
 ### Phase 2 — Editable entries in TurnResultsScreen
 - [ ] Add `updateEntryResult()` helper to `firebase/game.ts`
@@ -23,11 +16,13 @@ Phase 2 — Editable entries        — Not started
 
 ## Completed Work
 
-_(nothing yet this version)_
+2026-04-05 — Phase 1 complete: live running turn score and +1/−1 entry badge animation for viewers
 
 ## Implementation Decisions
 
-_(none yet)_
+2026-04-05 — Turn score = corrects − skips; steal excluded (steal immediately transitions to results screen)
+2026-04-05 — Badge is centered overlay (position: fixed, 50% from bottom), slides up + fades over 1.2s; describer does not see it
+2026-04-05 — `entries` defaults to `[]` in GameScreen destructure — Firebase omits the key until first entry is written
 
 ## Open Questions / Blockers
 
