@@ -23,7 +23,8 @@ src/
     useGame.ts      # Firebase subscription + all game state and actions
   firebase/
     config.ts       # Firebase app init (reads VITE_FIREBASE_* env vars)
-    game.ts         # createGame, joinGame, subscribeToGame, updateGame, registerDisconnect helpers
+    game.ts         # createGame, joinGame, subscribeToGame, updateGame, registerDisconnect,
+                    #   updateEntryResult helpers
   utils/
     seededShuffle.ts  # Deterministic Fisher-Yates with mulberry32 PRNG
     roomCode.ts       # 6-letter uppercase room code generation + collision check
@@ -45,21 +46,23 @@ context/            # Project planning docs
 - Phrases are a plain `string[]` in `phrases.ts` — no metadata, no IDs
 - Mobile-friendly layout — game is played on phones while on a video call
 - Firebase config injected at build time via `VITE_FIREBASE_*` env vars in `.env.local`
+- Running turn score is derived client-side from `currentTurn.entries` — no extra Firebase writes
+- `currentTurn.entries` is single-writer (describer only) during a turn and through TurnResultsScreen edits
 
 ## Context Files
 
 ```
-context/PLAN.md           — Implementation plan and phases (v2)
+context/PLAN.md           — Implementation plan and phases (v3)
 context/ARCHITECTURE.md   — System design and technical decisions
 context/PROGRESS.md       — Session tracking and current status
 context/BACKLOG.md        — Future features and ideas
 context/PREREQUISITES.md  — Firebase setup steps (complete before Phase 1)
 context/archive/PLAN_v1.md — Archived v1 plan (all phases complete)
+context/archive/PLAN_v2.md — Archived v2 plan (all phases complete)
 ```
 
 ## Current Focus
 
-> v2 Multiplayer — All phases complete
-> Phase 5 complete: reconnection prompt, host-disconnect overlay on GameScreen, deploy docs, Firebase rules documented.
-> Run `expand-project` to plan the next version.
+> v3 — Live viewer feedback + editable turn entries
+> Phase 1 (live viewer feedback) and Phase 2 (editable entries) are independent and can run in parallel.
 > Deploy with `npm run deploy` (requires `VITE_FIREBASE_*` vars in `.env.local`)

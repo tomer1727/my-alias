@@ -121,7 +121,7 @@ Local (React state / localStorage):
 - **firebase** — Realtime Database SDK (runtime dependency, added in v2)
 - **gh-pages** (dev) — deploy script to push built output to GitHub Pages
 
-## Firebase Security Rules (Phase 5 target)
+## Firebase Security Rules
 
 ```json
 {
@@ -136,4 +136,12 @@ Local (React state / localStorage):
 }
 ```
 
-Phase 5 will tighten these rules to prevent arbitrary data writes while keeping the personal-use simplicity.
+Open rules kept intentionally — this is a personal-use tool. Documented in README.
+
+## Key Technical Decisions (v3 additions)
+
+**[v3] Running turn score derived client-side from `currentTurn.entries`**
+Reason: No extra Firebase writes needed. Viewers already receive the live entries array; score is computed locally as `correct +1, skip −1, steal +1 (opposing team)`.
+
+**[v3] Entry edit restricted to the describer**
+Reason: Avoids conflicting edits. Describer is the single writer for `currentTurn.entries` during a turn; keeping that pattern through the results screen is simpler and avoids races.

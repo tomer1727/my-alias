@@ -3,99 +3,45 @@
 ## Current Status
 
 ```
-Phase 1 — Complete
-Phase 2 — Complete
-Phase 3 — Complete
-Phase 4 — Complete
-Phase 5 — Complete
+Phase 1 — Live viewer feedback    — Not started
+Phase 2 — Editable entries        — Not started
 ```
 
 ## Phase Progress
 
-### Phase 1 — Firebase Setup + Room Create/Join
-- [x] Install `firebase` package
-- [x] Create `firebase/config.ts` — init app using `VITE_FIREBASE_*` env vars
-- [x] Create `firebase/game.ts` — `createGame()`, `joinGame()`, `subscribeToGame()`, `updateGame()` helpers
-- [x] Implement `utils/roomCode.ts` — 6-letter random uppercase code + collision check
-- [x] Implement `utils/seededShuffle.ts` — seeded Fisher-Yates (mulberry32 PRNG)
-- [x] Build `HomeScreen`, `CreateScreen`, `JoinScreen`
-- [x] Wire `App.tsx` to use `useGame.ts` hook; remove old single-player state
-- [x] Create `.env.example` documenting required `VITE_FIREBASE_*` variable names
+### Phase 1 — Live viewer feedback
+- [ ] Derive running turn score from `currentTurn.entries` in viewer GameScreen
+- [ ] Display "This turn: +N" alongside the game total in viewer view
+- [ ] Detect new entry additions and trigger badge animation
+- [ ] Build fade-out +1 / −1 badge component
 
-### Phase 2 — Lobby
-- [x] Build `LobbyScreen` — player list grouped by team A / B, self-assign buttons
-- [x] "Start Game" button visible to host only; enabled when both teams have ≥1 player
-- [x] Host config in lobby: timer duration + target score
-- [x] Firebase `onDisconnect` — write `connected: false` on player disconnect
-- [x] Host disconnection detection — show overlay when host disconnects
-
-### Phase 3 — Multiplayer Game Loop
-- [x] `PreTurnScreen` — upcoming describer's name + team; tap Start writes `startedAt` to Firebase
-- [x] Describer `GameScreen` — word, Correct/Skip/Steal, timer from `startedAt`
-- [x] Viewer `GameScreen` — timer, scores, whose turn — no word, no buttons
-- [x] Correct/Skip/Steal actions write to `currentTurn.entries`, increment `deckIndex`
-- [x] Timer expiry: describer writes `lastWord: true` when remaining ≤ 0
-- [x] Last word handling: Steal activates; any action writes `phase: 'results'`
-
-### Phase 4 — Turn Results + Score + Win
-- [x] `TurnResultsScreen` — turn summary + team scores; "Start Next Turn" for next describer
-- [x] "Start Next Turn" accumulates score, advances turn rotation, clears `currentTurn`
-- [x] Win check: if `score >= targetScore`, write `winner` and `status: 'finished'`
-- [x] `WinScreen` — winning team, final scores, Play Again
-
-### Phase 5 — Polish + Edge Cases
-- [x] Reconnection: check `localStorage` for `playerId`, re-subscribe to active game
-- [x] "Host disconnected" blocking overlay
-- [x] Stale game cleanup — write `createdAt`, document manual cleanup
-- [x] Update deploy docs — `VITE_FIREBASE_*` vars required at build time
-- [x] Firebase security rules — lock down `games/{roomCode}`
+### Phase 2 — Editable entries in TurnResultsScreen
+- [ ] Add `updateEntryResult()` helper to `firebase/game.ts`
+- [ ] Add toggle button to each word row in TurnResultsScreen, visible to describer only
+- [ ] Cycle result on tap: correct ↔ skip for all words; correct / skip / steal for last word
+- [ ] Show updated running turn total in TurnResultsScreen reactively
 
 ## Completed Work
 
-[2026-03-23] — Phase 1 complete: Firebase wired up, room create/join flow working end-to-end with real-time sync
-[2026-03-23] — Phase 2 complete: Lobby with team self-assignment, host config (timer + target score steppers), Start Game flow, host disconnect overlay
-[2026-03-23] — Phase 3 complete: PreTurnScreen, describer + viewer GameScreen, Correct/Skip/Steal actions, timer expiry, last-word handling; TurnResultsScreen placeholder added
-[2026-03-24] — Phase 5 complete: reconnection prompt on HomeScreen, host-disconnect overlay on GameScreen, stale game cleanup docs, deploy docs in README, Firebase open rules acknowledged
+_(nothing yet this version)_
 
 ## Implementation Decisions
 
-[2026-03-23] — `CreateScreen` collects nickname only; timer/target score config moved to lobby (Phase 2)
-[2026-03-23] — Used `crypto.randomUUID()` for `playerId` generation instead of adding a `uuid` package dependency
-[2026-03-23] — Firebase database rules set to open read/write on `games/$roomCode` for development; Phase 5 will tighten
-[2026-03-23] — Phase 2, Task 4 (onDisconnect) was already implemented in Phase 1 via `registerDisconnect`; marked complete
-[2026-03-23] — Host disconnect overlay (Phase 2, Task 5) is lobby-only for now; full in-game overlay deferred to Phase 5
-[2026-03-23] — `handleStartGame` initializes `currentTurn` (team A, first describer) when starting; Phase 3 `PreTurnScreen` reads it directly
-[2026-03-23] — Team players shown in Firebase key insertion order; consistent across all clients
-[2026-03-23] — Timer runs as setInterval in GameScreen (client-side); only the describer's device writes `lastWord: true` when remaining hits 0
-[2026-03-23] — Entries appended to Firebase by index (`currentTurn/entries/${length}`); single-writer (describer only) avoids race conditions
-[2026-03-23] — Steal button disabled by default, activates only when `lastWord: true`; any button tap on last word writes `phase: 'results'`
-[2026-03-23] — TurnResultsScreen is a placeholder (shows entries + current scores); full score accumulation + turn rotation deferred to Phase 4
-[2026-03-23] — Scoring: correct +1, skip -1, steal +1 for opposing team
-[2026-03-23] — Play Again resets to lobby and clears all team assignments
-[2026-03-23] — When game-winning turn ends, TurnResultsScreen shows game-over banner + "Show Final Results" (host only) instead of "Start Next Turn" — prevents confusing UX where next describer would navigate everyone to WinScreen
-[2026-03-24] — Reconnection is opt-in: on load, check localStorage for stored roomCode; if room exists and player is in it, show "Rejoin room X?" card on HomeScreen instead of auto-navigating — prevents players getting stuck in a room they didn't choose to rejoin
-[2026-03-24] — Firebase open rules kept as-is; documented as intentional for personal-use tool in README
-[2026-03-24] — Host disconnect overlay reuses existing `.lobby-overlay` CSS classes from LobbyScreen
+_(none yet)_
 
 ## Open Questions / Blockers
 
 _(none)_
 
-## Next Session
-
-Plan complete — run expand-project if you want to plan the next version
-
 ---
 
 ## Previous Version Summary
 
-- v1 was a single-player turn manager: Start screen → Game screen → Results screen
-- Configurable timer (stepper, 10s–300s, default 60s)
-- Score tracking: "This Turn" + "Game Total" sections on Results screen; score = correct − skipped
-- New Game button resets totals, reshuffles deck, preserves timer setting
-- Timer implemented as `setInterval` countdown with color coding (green → orange → red) and last-5s pulse
-- Shuffled deck persists across turns within a game; wraps around when exhausted
-- ~600 Hebrew phrases (started at 100, grew to ~600 via manual additions)
-- All state owned by `App.tsx`; screens were stateless props receivers
-- Deployed to GitHub Pages via `npm run deploy` (gh-pages package)
-- SSH alias `github-second` used to deploy as tomer1727 from this machine
+- v2 added full real-time multiplayer via Firebase Realtime Database
+- Room create/join with 6-letter codes; lobby with team self-assignment and host config
+- Full multiplayer game loop: describer and viewer roles, synced timer (startedAt timestamp), seeded deck (mulberry32 PRNG + Fisher-Yates, only deckIndex synced)
+- Turn results screen, score accumulation, win condition, Play Again
+- Reconnection: opt-in rejoin prompt on HomeScreen using localStorage playerId + roomCode
+- Host disconnect overlay on both LobbyScreen and GameScreen (reuses .lobby-overlay CSS)
+- Firebase open rules kept intentionally for personal-use tool; documented in README
+- Deployed to GitHub Pages via `npm run deploy`; VITE_FIREBASE_* vars required at build time
