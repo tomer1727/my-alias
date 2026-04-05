@@ -8,6 +8,7 @@ import {
   gameExists,
   getGame,
   updateGame,
+  updateEntryResult,
 } from '../firebase/game'
 import { generateRoomCode } from '../utils/roomCode'
 import { seededShuffle } from '../utils/seededShuffle'
@@ -49,6 +50,7 @@ export type GameHook = {
   handleWordAction: (result: TurnEntry['result']) => Promise<void>
   handleTimerExpired: () => Promise<void>
   handleStartNextTurn: () => Promise<void>
+  handleUpdateEntryResult: (index: number, result: TurnEntry['result']) => Promise<void>
   handlePlayAgain: () => Promise<void>
 }
 
@@ -281,6 +283,11 @@ export function useGame(): GameHook {
     console.log(`TurnResults: next turn started — Team ${nextTeam}, score A=${newCurrentTeamScore} B=${newOtherTeamScore}`)
   }, [roomCode, game])
 
+  const handleUpdateEntryResult = useCallback(async (index: number, result: TurnEntry['result']) => {
+    await updateEntryResult(roomCode, index, result)
+    console.log(`TurnResults: entry ${index} toggled → ${result}`)
+  }, [roomCode])
+
   const handlePlayAgain = useCallback(async () => {
     if (!game) return
     const resetPlayers: Record<string, unknown> = {}
@@ -300,5 +307,5 @@ export function useGame(): GameHook {
     console.log('WinScreen: play again — reset to lobby')
   }, [roomCode, game])
 
-  return { screen, game, roomCode, playerId, currentWord, isDescriber, nextDescriberId, reconnectMessage, pendingReconnect, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleReconnect, handleDismissReconnect, handleJoinTeam, handleUpdateConfig, handleStartGame, handleStartTurn, handleWordAction, handleTimerExpired, handleStartNextTurn, handlePlayAgain }
+  return { screen, game, roomCode, playerId, currentWord, isDescriber, nextDescriberId, reconnectMessage, pendingReconnect, handleCreateGame, handleJoinGame, handleGoHome, handleGoCreate, handleGoJoin, handleReconnect, handleDismissReconnect, handleJoinTeam, handleUpdateConfig, handleStartGame, handleStartTurn, handleWordAction, handleTimerExpired, handleStartNextTurn, handleUpdateEntryResult, handlePlayAgain }
 }

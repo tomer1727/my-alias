@@ -650,6 +650,17 @@ body {
 .entry-badge-skip    { background: #f1f5f9; color: #475569; }
 .entry-badge-steal   { background: #fef3c7; color: #b45309; }
 
+.entry-badge-btn {
+  border: 1.5px dashed currentColor;
+  cursor: pointer;
+  font-family: inherit;
+  touch-action: manipulation;
+  opacity: 0.85;
+}
+.entry-badge-btn:active {
+  filter: brightness(0.9);
+}
+
 /* ── Score row ─────────────────────────────────────────── */
 
 .score-row {
