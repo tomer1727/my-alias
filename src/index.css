@@ -783,6 +783,41 @@ body {
   text-align: center;
 }
 
+.game-turn-score {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+}
+
+@keyframes entryBadgeSlideUp {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-60px); }
+}
+
+.game-entry-badge {
+  position: fixed;
+  bottom: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  font-weight: 900;
+  border-radius: 16px;
+  padding: 0.2rem 1rem;
+  pointer-events: none;
+  animation: entryBadgeSlideUp 1.2s ease-out forwards;
+}
+
+.game-entry-badge--correct {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.game-entry-badge--skip {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
 /* ── Turn results additions ────────────────────────────── */
 
 .results-scores {
