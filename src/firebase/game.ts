@@ -9,7 +9,7 @@ import {
   type Unsubscribe,
 } from 'firebase/database'
 import { db } from './config'
-import type { Game, Player } from '../types'
+import type { Game, Player, TurnEntry } from '../types'
 
 // ── Helpers ──────────────────────────────────────────────
 
@@ -107,4 +107,12 @@ export async function updateGame(
   updates: Record<string, unknown>,
 ): Promise<void> {
   await update(gameRef(roomCode), updates)
+}
+
+export async function updateEntryResult(
+  roomCode: string,
+  index: number,
+  result: TurnEntry['result'],
+): Promise<void> {
+  await update(ref(db, `games/${roomCode}/currentTurn/entries/${index}`), { result })
 }

@@ -5,6 +5,7 @@ type Props = {
   nextDescriberId: string | null
   playerId: string
   onStartNextTurn: () => Promise<void>
+  onUpdateEntryResult: (index: number, result: TurnEntry['result']) => Promise<void>
 }
 
 const RESULT_LABELS: Record<TurnEntry['result'], string> = {
@@ -19,10 +20,20 @@ const RESULT_CLASSES: Record<TurnEntry['result'], string> = {
   steal: 'entry-badge-steal',
 }
 
-export default function TurnResultsScreen({ game, nextDescriberId, playerId, onStartNextTurn }: Props) {
+function cycleResult(current: TurnEntry['result'], isLast: boolean): TurnEntry['result'] {
+  if (isLast) {
+    if (current === 'correct') return 'skip'
+    if (current === 'skip') return 'steal'
+    return 'correct'
+  }
+  return current === 'correct' ? 'skip' : 'correct'
+}
+
+export default function TurnResultsScreen({ game, nextDescriberId, playerId, onStartNextTurn, onUpdateEntryResult }: Props) {
   const { team, describerId, entries } = game.currentTurn
   const describerName = game.players[describerId]?.name ?? 'Unknown'
   const entryList: TurnEntry[] = Array.isArray(entries) ? entries : []
+  const isDescriber = playerId === describerId
 
   const correct = entryList.filter(e => e.result === 'correct').length
   const skipped = entryList.filter(e => e.result === 'skip').length
@@ -65,14 +76,30 @@ export default function TurnResultsScreen({ game, nextDescriberId, playerId, onS
       </div>
 
       <ul className="results-list">
-        {entryList.map((e, i) => (
-          <li key={i} className="results-entry">
-            <span className="entry-word">{e.word}</span>
-            <span className={`entry-badge ${RESULT_CLASSES[e.result]}`}>
-              {RESULT_LABELS[e.result]}
-            </span>
-          </li>
-        ))}
+        {entryList.map((e, i) => {
+          const isLast = i === entryList.length - 1
+          return (
+            <li key={i} className="results-entry">
+              <span className="entry-word">{e.word}</span>
+              {isDescriber ? (
+                <button
+                  className={`entry-badge entry-badge-btn ${RESULT_CLASSES[e.result]}`}
+                  onClick={() => {
+                    const next = cycleResult(e.result, isLast)
+                    console.log(`TurnResults: tapped entry ${i} "${e.word}" ${e.result} → ${next}`)
+                    onUpdateEntryResult(i, next).catch(err => console.error('TurnResults: entry update failed', err))
+                  }}
+                >
+                  {RESULT_LABELS[e.result]}
+                </button>
+              ) : (
+                <span className={`entry-badge ${RESULT_CLASSES[e.result]}`}>
+                  {RESULT_LABELS[e.result]}
+                </span>
+              )}
+            </li>
+          )
+        })}
       </ul>
 
       <div className="results-scores">

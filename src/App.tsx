@@ -32,6 +32,7 @@ export default function App() {
     handleWordAction,
     handleTimerExpired,
     handleStartNextTurn,
+    handleUpdateEntryResult,
     handlePlayAgain,
   } = useGame()
 
@@ -108,6 +109,7 @@ export default function App() {
         playerId={playerId}
         nextDescriberId={nextDescriberId}
         onStartNextTurn={handleStartNextTurn}
+        onUpdateEntryResult={handleUpdateEntryResult}
       />
     )
   }

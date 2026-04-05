@@ -9,20 +9,24 @@
 - [x] Build fade-out +1 / −1 badge component
 
 ### Phase 2 — Editable entries in TurnResultsScreen
-- [ ] Add `updateEntryResult()` helper to `firebase/game.ts`
-- [ ] Add toggle button to each word row in TurnResultsScreen, visible to describer only
-- [ ] Cycle result on tap: correct ↔ skip for all words; correct / skip / steal for last word
-- [ ] Show updated running turn total in TurnResultsScreen reactively
+- [x] Add `updateEntryResult()` helper to `firebase/game.ts`
+- [x] Add toggle button to each word row in TurnResultsScreen, visible to describer only
+- [x] Cycle result on tap: correct ↔ skip for all words; correct / skip / steal for last word
+- [x] Show updated running turn total in TurnResultsScreen reactively
 
 ## Completed Work
 
 2026-04-05 — Phase 1 complete: live running turn score and +1/−1 entry badge animation for viewers
+2026-04-05 — Phase 2 complete: editable turn entries in TurnResultsScreen
 
 ## Implementation Decisions
 
 2026-04-05 — Turn score = corrects − skips; steal excluded (steal immediately transitions to results screen)
 2026-04-05 — Badge is centered overlay (position: fixed, 50% from bottom), slides up + fades over 1.2s; describer does not see it
 2026-04-05 — `entries` defaults to `[]` in GameScreen destructure — Firebase omits the key until first entry is written
+2026-04-05 — Steal is only valid on the last word; non-last entries cycle correct ↔ skip only
+2026-04-05 — Used dashed border (currentColor) on badge buttons as the edit affordance — matches badge color, no extra UI elements
+2026-04-05 — Score delta in results screen is already reactive (derived from entryList on every render); no extra Firebase writes needed
 
 ## Open Questions / Blockers
 
